@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <color name="colorAccent">#FF0000FF</color>
+    <color name="colorAccentT">#FF000080</color>
+    <color name="colorAccentA">#CC0000FF</color>
+    <color name="colorAccentAT">#CC000080</color>
+</resources>
