@@ -162,11 +162,14 @@ public class Setter extends RelativeLayout {
 																}
 						} else if(type.contains("Text")) {
 												((EditText)o).setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
-												//((EditText)o).setBackground(new ColorDrawable(Color.parseColor("#FFFFFFFF")));
+
+                            //((EditText)o).setBackground(new ColorDrawable(Color.parseColor("#FFFFFFFF")));
 									((EditText)o).setText(ASelf.getCalcSet(getContext()).getString(rtitle,""));
 									((EditText)o).setTextColor(Color.parseColor("#FF808080"));
 											llSet.setBackground(new ColorDrawable(Color.parseColor("#00000000")));
-                            ((EditText)o).setPadding(8,4,8,4);
+                            int dim8 = Math.round(getContext().getResources().getDimension(R.dimen.dim8dp));
+                            int dim16 = Math.round(getContext().getResources().getDimension(R.dimen.dim16dp));
+                            ((EditText)o).setPadding(dim16,dim8,dim16,dim8);
         				if(vtype.equals("Textn")) {((EditText)o).setInputType(InputType.TYPE_CLASS_NUMBER);}
 									else if(vtype.equals("Texttcn")) {}
 												((EditText)o).setBackgroundResource(R.drawable.bg_green_s);
