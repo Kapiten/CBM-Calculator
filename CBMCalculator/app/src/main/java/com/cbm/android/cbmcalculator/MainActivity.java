@@ -252,6 +252,7 @@ public class MainActivity extends Activity {
             int dl = Integer.parseInt(ASelf.getCalcSet(this).getString(getResources().getString(R.string.decimal_count_textn), "1"));
             ASelf.mDF.setMaximumFractionDigits(dl);
             ASelf.mDF.setMinimumFractionDigits(dl);
+            ASelf.carryAnswer = ASelf.getCalcSet(this).getString(getResources().getString(R.string.history_carry_answer_switch), "Off").equals("On");
             
             /*llDoneCalculation.setBackground(DefaultThemeSet.mkShape(new JSONObject(ASelf.getCalcSet(this).getString(getResources().getString(R.string.answer_color),""))));
             tvDoneCalculation.setTextColor(ASelf.getCalcSet(this).getInt(getResources().getString(R.string.answer_textc),Color.BLACK));
@@ -351,6 +352,11 @@ public class MainActivity extends Activity {
                                  if(aSelf.isStandBy()) {
                                      clearC();
                                      aSelf.setStandBy(false);
+                                     if(ASelf.carryAnswer&&!ASelf.isNumber(str)){
+                                         if(!aSelf.carriedAnswer.isEmpty()&&ASelf.isNumber(aSelf.carriedAnswer)) {
+                                             aSelf.entry(MainActivity.this,aSelf.carriedAnswer);
+                                         }
+                                     }
                                  }
                                  hc=1;
                                  hca=true;
@@ -479,6 +485,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 clearC();
                 if(aSelf.getSBEg(getApplicationContext())==1) placeholders();
+                aSelf.carriedAnswer="";
     
             }
         });
@@ -622,6 +629,7 @@ public class MainActivity extends Activity {
                         if(currentSign.equals("%"))answ=Double.parseDouble((ans)+"")+"("+(ans*100)+"%)";
                         tvDoneCalculation.setAlpha(placeholders?0.5f:1f);
                         tvDoneCalculation.setText(answ2);
+                        if(ASelf.carryAnswer)aSelf.carriedAnswer=answ2;
                         //tvNowCalculation.setText(tvNowCalculation.getText()+"=");
                         if(!((TextView)llNC.getChildAt(llNC.getChildCount()-1)).getText().toString().equals("=")){
                                 CurrentComponents.addCurrentTV(MainActivity.this, "=", 1);}

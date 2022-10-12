@@ -186,6 +186,7 @@ public class SettingsActivity extends Activity {
                 ed.putString(getResources().getString(R.string.decimal_always_switch), "Off");
                 ed.putString(getResources().getString(R.string.decimal_count_textn), "1");
                 ed.putString(getResources().getString(R.string.history_limit_textn), "10");
+                       ed.putString(getResources().getString(R.string.history_carry_answer_switch), "Off");
                 
                             ed.apply();
                         updateSettings();

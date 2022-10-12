@@ -44,9 +44,9 @@ public class ASelf {
     
     public ArrayList<String> arr = new ArrayList<>();
     public ArrayList<JSONObject> arrS = new ArrayList<>();
-    public String mDoneCalculation;
+    public String mDoneCalculation, carriedAnswer="";
     public int tvCInd=0, historyCount=0, sbEmpty = 0, expCount=0, expAltInd=0;
-    public static boolean decimalAlways, bOpts, phOn;
+    public static boolean decimalAlways, bOpts, phOn, carryAnswer;
     public static DecimalFormat mDF;
     public KeypadModeOpt mKeypadMode = KeypadModeOpt.Numbers;
     
@@ -197,9 +197,7 @@ public class ASelf {
     }
     
     public static SharedPreferences getCalcSet(Context c) {
-        SharedPreferences sp = c.getSharedPreferences("CBMCalcSettings", Context.MODE_PRIVATE);
-        
-        return sp;
+        return c.getSharedPreferences("CBMCalcSettings", Context.MODE_PRIVATE);
     }
     
     public void onSave(Context c, int a) {
@@ -532,28 +530,37 @@ public class ASelf {
                 }
                 ((Button)os[2]).setEnabled(true);
             } else {
-                if(isNumber(arr.get(arr.size()-1>=0?arr.size()-1:0))) {
-                    if(str.equals("%")){
-                        arr.add("×");
-                        arr.add("0.01");
-                        CurrentComponents.addCurrentTV(c,"×",2);
-                        CurrentComponents.addCurrentTV(c,"0.01");
-                    } else{
-                            if(tvCInd<=arr.size())arr.add(tvCInd+1,str); else arr.add(str);
-        //arr.add(str);
-                        CurrentComponents.addCurrentTV(c,tvCInd+1,str,2);
-                    }
-                    if(!Ut.measureSymbol(str)){CurrentComponents.addCurrentTV(c,tvCInd+2,"",0);arr.add(tvCInd+2,"");}
-                            indexify(c);
-                } else {
-                    String s = arr.get(arr.size()-1);
-                    if(s.equals("%")) {
-                        arr.add(str);
-                        CurrentComponents.addCurrentTV(c,str,2);
+                if(arr.size()-1>=0) {
+                    if (isNumber(arr.get(arr.size() - 1))) {
+                        if (str.equals("%")) {
+                            arr.add("×");
+                            arr.add("0.01");
+                            CurrentComponents.addCurrentTV(c, "×", 2);
+                            CurrentComponents.addCurrentTV(c, "0.01");
+                        } else {
+                            if (tvCInd <= arr.size()) arr.add(tvCInd + 1, str);
+                            else arr.add(str);
+                            //arr.add(str);
+                            CurrentComponents.addCurrentTV(c, tvCInd + 1, str, 2);
+                        }
+                        if (!Ut.measureSymbol(str)) {
+                            CurrentComponents.addCurrentTV(c, tvCInd + 2, "", 0);
+                            arr.add(tvCInd + 2, "");
+                        }
+                        indexify(c);
                     } else {
-                        entry(c, "0", os);
-                        entry(c, str, os);
+                        String s = arr.get(arr.size() - 1);
+                        if (s.equals("%")) {
+                            arr.add(str);
+                            CurrentComponents.addCurrentTV(c, str, 2);
+                        } else {
+                            entry(c, "0", os);
+                            entry(c, str, os);
+                        }
                     }
+                } else {
+                    entry(c, "0", os);
+                    entry(c, str, os);
                 }
             }
         }
