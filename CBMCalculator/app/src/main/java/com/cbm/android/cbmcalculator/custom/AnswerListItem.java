@@ -15,6 +15,7 @@ public class AnswerListItem extends RelativeLayout {
     
     public TextView tvAnsNr, tvAnsCalc, tvAns;
     public LinearLayout rlALI;
+    public String otherInfo;
     
     public AnswerListItem(final Context context) {
         super(context);
@@ -42,7 +43,7 @@ public class AnswerListItem extends RelativeLayout {
         tvAnsCalc = v.findViewById(R.id.tvAnsCalc);
         tvAns = v.findViewById(R.id.tvAns);
         
-        tvAnsNr.setOnClickListener(new View.OnClickListener() {
+        /*tvAnsNr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -80,12 +81,20 @@ public class AnswerListItem extends RelativeLayout {
                     Toast.makeText(context, ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
     }
     
     public void createAnswerItem(String[] values) {
         tvAnsNr.setText(values[0]);
         tvAnsCalc.setText(values[1]);
         tvAns.setText(values[2]);
+    }
+
+    public String getOtherInfo() {
+        return otherInfo;
+    }
+
+    public void setOtherInfo(String otherInfo) {
+        this.otherInfo = otherInfo;
     }
 }

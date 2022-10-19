@@ -2,6 +2,7 @@ package com.cbm.android.cbmcalculator.settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -173,23 +174,8 @@ public class SettingsActivity extends Activity {
                 adbr.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                    @Override
                     public void onClick(DialogInterface d, int aa) {
-                        SharedPreferences.Editor ed = ASelf.getCalcSet(getApplicationContext()).edit();
-                        
-                        SharedPreferences.Editor edh = ASelf.getCalcHistory(getApplicationContext()).edit();
-                        edh.clear();
-                        edh.commit();
-                        edh.apply();
-                        int x = 0;
-                int y = 0;
-                ed.putString(getResources().getString(R.string.stand_by_example_switch), "Off");
-                ed.putString(getResources().getString(R.string.stand_by_example_default_expression_texttcn), "1+2");
-                ed.putString(getResources().getString(R.string.decimal_always_switch), "Off");
-                ed.putString(getResources().getString(R.string.decimal_count_textn), "1");
-                ed.putString(getResources().getString(R.string.history_limit_textn), "10");
-                       ed.putString(getResources().getString(R.string.history_carry_answer_switch), "Off");
-                
-                            ed.apply();
-                        updateSettings();
+                        resetSettings(getApplicationContext());
+                       updateSettings();
                     }
                 });
                 adbr.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -204,6 +190,23 @@ public class SettingsActivity extends Activity {
             }
         };
         
+    }
+
+    public static void resetSettings(Context c) {
+        SharedPreferences.Editor ed = ASelf.getCalcSet(c).edit();
+
+        SharedPreferences.Editor edh = ASelf.getCalcHistory(c).edit();
+        edh.clear();
+        edh.commit();
+        edh.apply();
+        ed.putString(c.getResources().getString(R.string.stand_by_example_switch), "Off");
+        ed.putString(c.getResources().getString(R.string.stand_by_example_default_expression_texttcn), "1+2");
+        ed.putString(c.getResources().getString(R.string.decimal_always_switch), "Off");
+        ed.putString(c.getResources().getString(R.string.decimal_count_textn), "1");
+        ed.putString(c.getResources().getString(R.string.history_limit_textn), "10");
+        ed.putString(c.getResources().getString(R.string.history_carry_answer_switch), "Off");
+
+        ed.apply();
     }
     
 }

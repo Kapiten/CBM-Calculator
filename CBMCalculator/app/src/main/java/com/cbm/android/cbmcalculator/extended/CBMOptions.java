@@ -2,9 +2,11 @@ package com.cbm.android.cbmcalculator.extended;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -20,25 +22,27 @@ import java.util.ArrayList;
 import org.json.JSONObject;
 
 public class CBMOptions {
-    public static void funHistory(final Context c, Object[] os) {
-        try{
-            final ASelf aSelf = ASelf.get(c);
-            if(ASelf.getCalcHistory(c).getAll().size()>0) {
-               aSelf.setHCB(true);
-               if(aSelf.isStandBy()) {
-                   if(((Activity)c).equals((MainActivity)c))((MainActivity)c).clearC();
+    public static void funHistory(final Context c, final Object[] os) {
+                try{
+                    final ASelf aSelf = ASelf.get(c);
+                    if(ASelf.getCalcHistory(c).getAll().size()>0) {
+                        aSelf.setHCB(true);
+                        if(aSelf.isStandBy()) {
+                            if(((Activity)c).equals((MainActivity)c))((MainActivity)c).clearC();
                             aSelf.onSaved(c, -1, (View)os[0], (View)os[1]);
-                }else {
-                    aSelf.onSave(c, ASelf.getCalcHistory(c).getAll().size()/*getHC()*/);
+                        }else {
+                            aSelf.onSave(c, ASelf.getCalcHistory(c).getAll().size()/*getHC()*/);
                             //Toast.makeText(c, "There sHe is", Toast.LENGTH_SHORT).show();
+                        }
+                    }else {
+                        Toast.makeText(c, "No History", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch(Exception ex) {
+                    Toast.makeText(c, ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            }else {
-                Toast.makeText(c, "No History", Toast.LENGTH_SHORT).show();
-            }
-            
-                            } catch(Exception ex) {
-                                Toast.makeText(c, ex.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
+
+
     }
     
     public static void funMADS(final Context c, final Object[] os) {

@@ -1,12 +1,16 @@
 package com.cbm.android.cbmcalculator;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -29,13 +33,14 @@ import com.cbm.android.cbmcalculator.utility.*;
 
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     private ASelf aSelf;
     
     private AlertDialog ad;
-    public Button btnSignChange, btnEquals, btnPoint,/*btnMASMD, */btnPercentage, btnHistory, btnSettings;
+    public Button btnSignChange, btnEquals, btnPoint, btnMASMD, btnPercentage, btnHistory, btnSettings;
     
     public ImageButton btnBackspace, btnRefresh, btnScifra;
     public TextView tvCurrent, tvDoneCalculation, tvCTitle; 
@@ -66,32 +71,34 @@ public class MainActivity extends Activity {
         try {
             aSelf = ASelf.get(this);
             ad = new AlertDialog.Builder(this).create();
-            llDoneCalculation = this.findViewById(R.id.llDoneCalculation);
-            tvDoneCalculation = this.findViewById(R.id.tvDoneCalculation);
+            llDoneCalculation = (HorizontalScrollView) this.findViewById(R.id.llDoneCalculation);
+            tvDoneCalculation = (TextView)this.findViewById(R.id.tvDoneCalculation);
             //tvNow = this.findViewById(R.id.etNow);
-            btnSettings = this.findViewById(R.id.btnMSettings);
-            btnScifra = this.findViewById(R.id.btnScifra);
-            btnSignChange = this.findViewById(R.id.btnMInverse);
+            btnSettings = (Button)this.findViewById(R.id.btnMSettings);
+            btnMASMD = (Button)this.findViewById(R.id.btnMASMD);
+            btnScifra = (ImageButton)this.findViewById(R.id.btnScifra);
+            btnSignChange = (Button)this.findViewById(R.id.btnMInverse);
             btnPercentage = ((Button)this.findViewById(R.id.btnMPercentage));
             //tvCalculated = (TextView)LayoutInflater.from(this).inflate(R.layout.calculated_text, null);
-            hsvNC = this.findViewById(R.id.hsvNowCalculation);
-            svC = this.findViewById(R.id.svCalculation);
-            btnHistory = this.findViewById(R.id.btnMHistory);
-            btnRefresh = this.findViewById(R.id.btnRefresh);
-            btnEquals = this.findViewById(R.id.btnEquals);
-            btnPoint = this.findViewById(R.id.btnPoint);
-            btnBackspace = this.findViewById(R.id.btnBackspace);
+            hsvNC = (HorizontalScrollView)this.findViewById(R.id.hsvNowCalculation);
+            svC = (ScrollView)this.findViewById(R.id.svCalculation);
+            btnHistory = (Button)this.findViewById(R.id.btnMHistory);
+            btnRefresh =(ImageButton) this.findViewById(R.id.btnRefresh);
+            //btnEquals = (Button)this.findViewById(R.id.btnEquals);
+            //btnPoint = (Button)this.findViewById(R.id.btnPoint);
+            btnBackspace =(ImageButton) this.findViewById(R.id.btnBackspace);
             llLM = ((LinearLayout)this.findViewById(R.id.llLM));
-            llEntry = this.findViewById(R.id.llEntry);
-            llToolbar = this.findViewById(R.id.llToolbar);
-            svScifra = this.findViewById(R.id.svScifra);
-            llScifra = this.findViewById(R.id.llScifra);
-            llCalculation = this.findViewById(R.id.llCalculation);
-            llNC = this.findViewById(R.id.llNC);
+            llEntry = (LinearLayout) this.findViewById(R.id.llEntry);
+            llToolbar = (LinearLayout)this.findViewById(R.id.llToolbar);
+            svScifra = (ScrollView)this.findViewById(R.id.svScifra);
+            llScifra = (LinearLayout)this.findViewById(R.id.llScifra);
+            llCalculation = (LinearLayout)this.findViewById(R.id.llCalculation);
+            llNC = (LinearLayout)this.findViewById(R.id.llNC);
             llScifra.setFocusable(true);
             llScifra.setClickable(true);
             aSelf.setStandBy(true);
             MediumAnims.scifraMenu(svScifra, false);
+            initEntry();
             applyOnClick();
             glBtns();
             hc = 0;
@@ -127,7 +134,6 @@ public class MainActivity extends Activity {
                 sped.putString("RecentExp", Ut.toJSON(aSelf.arr));
             } else {
                 sped.putString("RecentExp", "");
-            
             }
             sped.apply();
             
@@ -249,11 +255,13 @@ public class MainActivity extends Activity {
     
     private void applySettings() {
         try {
+            if(!ASelf.getCalcSet(this).contains(getResources().getString(R.string.stand_by_example_default_expression_texttcn))) {
+                SettingsActivity.resetSettings(this);
+            }
             int dl = Integer.parseInt(ASelf.getCalcSet(this).getString(getResources().getString(R.string.decimal_count_textn), "1"));
             ASelf.mDF.setMaximumFractionDigits(dl);
             ASelf.mDF.setMinimumFractionDigits(dl);
             ASelf.carryAnswer = ASelf.getCalcSet(this).getString(getResources().getString(R.string.history_carry_answer_switch), "Off").equals("On");
-            
             /*llDoneCalculation.setBackground(DefaultThemeSet.mkShape(new JSONObject(ASelf.getCalcSet(this).getString(getResources().getString(R.string.answer_color),""))));
             tvDoneCalculation.setTextColor(ASelf.getCalcSet(this).getInt(getResources().getString(R.string.answer_textc),Color.BLACK));
             ((LinearLayout)llEntry.getChildAt(3)).getChildAt(2).setBackgroundResource(R.drawable.bg_accent_sr);
@@ -283,12 +291,26 @@ public class MainActivity extends Activity {
                     });
                     //btnMASMD=((Button)findViewById(R.id.btnMASMD));
                     //btnMASMD.setEnabled(false);
-            /*btnMASMD.setOnClickListener(new View.OnClickListener() {
+            btnMASMD.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        /*if (aSelf.arr.size() > 0&&aSelf.isStandBy())
                         CBMOptions.funMADS(MainActivity.this, new Object[]{llCalculation, llNC, btnEquals, aSelf.calcNm, ad});
-                    
-        }});*/
+                        */
+                        try {
+                            if (aSelf.arr.size() > 0&&aSelf.isStandBy()) {
+                                btnMASMD.setSelected(!btnMASMD.isSelected());
+                                if (btnMASMD.isSelected())
+                                    tvDoneCalculation.setText(Ut.toBodmas(aSelf.arr).get(0));
+                                else {
+                                    tvDoneCalculation.setText(ASelf.calculation(aSelf.arr)[1]);
+                                }
+                            }
+                        } catch(Exception ex) {
+                            Toast.makeText(MainActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                }});
                ((Button)findViewById(R.id.btnMPie)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -337,7 +359,7 @@ public class MainActivity extends Activity {
     
     private void applyOnClick() {
         try {
-            for(int a = 0; a < llEntry.getChildCount(); a++) {
+           /* for(int a = 0; a < llEntry.getChildCount(); a++) {
                 LinearLayout ll = ((LinearLayout)llEntry.getChildAt(a));
             
                 for(int b = 0; b < ll.getChildCount(); b++) {
@@ -401,7 +423,7 @@ public class MainActivity extends Activity {
                 });
             }
                
-                /*tvCurrent.addTextChangedListener(new TextWatcher() {
+                tvCurrent.addTextChangedListener(new TextWatcher() {
 									@Override
 										   public void beforeTextChanged(CharSequence t, int a, int b, int cc) {}
 															
@@ -419,8 +441,8 @@ public class MainActivity extends Activity {
                     			
 										   @Override
 									     public void afterTextChanged(Editable e) {}
-            });*/
-            }
+            });
+            }*/
             
                 btnScifra.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -597,14 +619,13 @@ public class MainActivity extends Activity {
                             currentSign = aSelf.arr.get(x);
                             //ans = ans + Integer.parseInt(aSelf.arr.get(x+1));
                         } else {
-                                    double anso = 0;
+                            double anso = 0;
                             if(x>1)anso = Double.parseDouble(aSelf.arr.get(x));
-                            ans = aSelf.calculate(currentSign, ans, anso);
+                            ans = ASelf.calculate(currentSign, ans, anso);
                             
-                                    String c = "";
+                            String c = "";
                             if(x>=0) {
-                               if(cAns>1)
-                                    c = "(@"+(cAns-1)+")";
+                               if(cAns>1)c = "(@"+(cAns-1)+")";
                                         
                                 answ = (ans2+"").endsWith(".0")?Integer.parseInt((ans2+"").substring(0, (ans2+"").indexOf(".")))+"":(ans2+"");
                                 answ2 = (ans+"").contains(".")?((ans+"").endsWith(".0")?Integer.parseInt((ans+"").replace(".0",""))+"":(ans+"")):(ans+"");
@@ -614,8 +635,14 @@ public class MainActivity extends Activity {
                                     answ2 = ASelf.mDF.format(Double.parseDouble(ans+""));
                                     answ3 = ASelf.mDF.format(Double.parseDouble(aSelf.arr.get(x)));
                                 }
-                                if(x>0){
-                                    CurrentComponents.addCalculatedTV(MainActivity.this, new JSONObject().put(ASelf.Calculation.Ix.toString(),cAns+"").put(ASelf.Calculation.LmtIx.toString(),cAns+"").put(ASelf.Calculation.Exp.toString(),answ+currentSign+answ3+"=").put(ASelf.Calculation.ExpAns.toString(),answ2).put(ASelf.Calculation.DoneCalc.toString(),answ2));
+                                if(x>0) {
+                                    CurrentComponents.addCalculatedTV(MainActivity.this, new JSONObject()
+                                            .put(ASelf.Calculation.Ix.toString(),cAns+"")
+                                            .put(ASelf.Calculation.LmtIx.toString(),cAns+"")
+                                            .put(ASelf.Calculation.Exp.toString(),answ+currentSign+answ3+"=")
+                                            .put(ASelf.Calculation.ExpAns.toString(),answ2)
+                                            .put(ASelf.Calculation.DoneCalc.toString(),answ2)
+                                            .put(getResources().getString(R.string.answer_for), new JSONArray().put(x-2).put(x-1).put(x).toString()));
                                 cAns+=1;}
                             }
                         }
@@ -642,7 +669,8 @@ public class MainActivity extends Activity {
                             .put(ASelf.Calculation.Exp.toString(),"Final Answer: @"+cAns+"=")
                             .put(ASelf.Calculation.ExpAns.toString(),answ2)
                             .put(ASelf.Calculation.DoneCalc.toString(),answ2)
-                            .put(ASelf.Calculation.dType.toString(), 1)); 
+                            .put(ASelf.Calculation.dType.toString(), 1)
+                            .put(getResources().getString(R.string.answer_for), new JSONArray().put(aSelf.arr.size()).toString()));
                         //new String[]{"FA", "Final Answer: @"+cAns+"=", ans+""}), 1);
                         if(llCalculation.getChildCount()>0){
                             if(tvDoneCalculation.getAlpha()!=1)
@@ -679,6 +707,88 @@ public class MainActivity extends Activity {
         }
     }
 
+    private Button createEntry(String title, int type) {
+        Button btn = new Button(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT);
+        int dim4dp = Math.round(getResources().getDimension(R.dimen.dim4dp));
+        lp.setMargins(dim4dp,dim4dp,dim4dp,dim4dp);
+        lp.weight=1;
+        btn.setLayoutParams(lp);
+        btn.setText(title);
+        btn.setTextSize(22f);
+        if(type==0){btn.setBackground(getResources().getDrawable(R.drawable.bg_white_green_r));btn.setTextColor(Color.BLACK);}
+        else if(type==1){btn.setBackground(getResources().getDrawable(R.drawable.bg_black_blue_sr));btn.setTextColor(Color.WHITE);}
+
+        return btn;
+    }
+
+    private void initEntry() {
+        String mads = getResources().getString(R.string.MADS);
+        for(String text: mads.split(",")) {
+            Button btn = createEntry(text, 1);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
+            int dim4dp = Math.round(getResources().getDimension(R.dimen.dim4dp));
+            lp.setMargins(dim4dp,dim4dp,dim4dp,dim4dp);
+            lp.weight=1;
+            btn.setLayoutParams(lp);
+            btn.setOnClickListener(onEntryClick());
+            ((LinearLayout)llEntry.getChildAt(1)).addView(btn);
+        }
+        int eRow = 2;
+        int eColumn=3;
+        for(int n=-2;n<=9;n++) {
+            if(n<1) {
+                if(n==-2){
+                    btnPoint = createEntry(".", 0);
+                    btnPoint.setBackground(getResources().getDrawable(R.drawable.bg_black_blue_sr));btnPoint.setTextColor(Color.WHITE);
+                    ((LinearLayout)((LinearLayout)llEntry.getChildAt(0)).getChildAt(3)).addView(btnPoint);}
+                if(n==-1){
+                    Button btn = createEntry("0", 0);
+                    btn.setOnClickListener(onEntryClick());
+                    ((LinearLayout)((LinearLayout)llEntry.getChildAt(0)).getChildAt(3)).addView(btn);
+                }
+                if(n==0){
+                    btnEquals = createEntry("=", 0);
+                    btnEquals.setBackground(getResources().getDrawable(R.drawable.bg_accent_sr));btnEquals.setTextColor(Color.WHITE);
+                    ((LinearLayout)((LinearLayout)llEntry.getChildAt(0)).getChildAt(3)).addView(btnEquals);
+                }
+            } else {
+                eColumn-=1;
+                Button btn = createEntry(String.valueOf(n), 0);
+                btn.setOnClickListener(onEntryClick());
+                ((LinearLayout)((LinearLayout)llEntry.getChildAt(0)).getChildAt(eRow)).addView(btn);
+
+                if(eColumn==0){eRow-=1;eColumn=3;}
+            }
+        }
+    }
+
+    private View.OnClickListener onEntryClick() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    String str = ((Button)v).getText().toString();
+                    if(aSelf.isStandBy()) {
+                        clearC();
+                        aSelf.setStandBy(false);
+                        if(ASelf.carryAnswer&&!ASelf.isNumber(str)){
+                            if(!aSelf.carriedAnswer.isEmpty()&&ASelf.isNumber(aSelf.carriedAnswer)) {
+                                aSelf.entry(MainActivity.this,aSelf.carriedAnswer);
+                            }
+                        }
+                    }
+                    hc=1;
+                    hca=true;
+                    aSelf.entry(MainActivity.this,str);
+                    aSelf.arrAct(MainActivity.this);
+                } catch(Exception ex) {
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+    }
+
     public void clearC() {
         llNC.removeAllViews();
         llCalculation.removeAllViews();
@@ -696,6 +806,7 @@ public class MainActivity extends Activity {
         tvDoneCalculation.setAlpha(aSelf.isStandBy()?0.5f:1f);
         tvDoneCalculation.setText(aSelf.isStandBy()?"Write an expression":"");
         btnPercentage.setEnabled(false);
+        btnMASMD.setSelected(false);
     }
     
     public void clearCTVS() {

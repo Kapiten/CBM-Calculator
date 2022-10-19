@@ -1,8 +1,11 @@
 package com.cbm.android.cbmcalculator.extended;
 
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+    import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
@@ -18,6 +21,7 @@ import com.cbm.android.cbmcalculator.R;
 import com.cbm.android.cbmcalculator.custom.AnswerListItem;
 import com.cbm.android.cbmcalculator.utility.Ut;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class CurrentComponents {
@@ -93,100 +97,38 @@ public class CurrentComponents {
                 
                 ((MainActivity)c).tvCurrent.setSelected(true);
                 if(((TextView)((MainActivity)c).llNC.getChildAt(calcCount)).getText().toString().equals("=")) {
-                  if(Integer.parseInt(tv.getTag()+"")<3) {
-                    if(ASelf.get(c).arr.size()==1){((MainActivity)c).llNC.getChildAt(0).setSelected(v.isSelected());((TextView)((MainActivity)c).llNC.getChildAt(0)).setTextColor(Color.WHITE);}
-                    ((MainActivity)c).llNC.getChildAt(0).setSelected(true);
-                    ((MainActivity)c).llNC.getChildAt(1).setSelected(true);
-                    ((MainActivity)c).llNC.getChildAt(2).setSelected(true);
-                    ((TextView)((MainActivity)c).llNC.getChildAt(0)).setTextColor(Color.WHITE);
-                    ((TextView)((MainActivity)c).llNC.getChildAt(1)).setTextColor(Color.WHITE);
-                    ((TextView)((MainActivity)c).llNC.getChildAt(2)).setTextColor(Color.WHITE);
-                } else if((Integer.parseInt(tv.getTag()+""))<((MainActivity)c).llNC.getChildCount()-1) {
-                    if((Double.parseDouble(tv.getTag()+"")/2+"").endsWith(".0")) {
-                        ((MainActivity)c).llNC.getChildAt(Integer.parseInt(tv.getTag()+"")-2).setSelected(true);
-                        ((MainActivity)c).llNC.getChildAt(Integer.parseInt(tv.getTag()+"")-1).setSelected(true);
-                        ((MainActivity)c).llNC.getChildAt(Integer.parseInt(tv.getTag()+"")).setSelected(true);
-                        ((TextView)((MainActivity)c).llNC.getChildAt(Integer.parseInt(tv.getTag()+"")-2)).setTextColor(Color.WHITE);
-                        ((TextView)((MainActivity)c).llNC.getChildAt(Integer.parseInt(tv.getTag()+"")-1)).setTextColor(Color.WHITE);
-                        ((TextView)((MainActivity)c).llNC.getChildAt(Integer.parseInt(tv.getTag()+""))).setTextColor(Color.WHITE);
-                    } else {
-                        ((MainActivity)c).llNC.getChildAt(Integer.parseInt(tv.getTag()+"")-1).setSelected(v.isSelected());
-                        ((MainActivity)c).llNC.getChildAt(Integer.parseInt(tv.getTag()+"")).setSelected(v.isSelected());
-                        ((MainActivity)c).llNC.getChildAt(Integer.parseInt(tv.getTag()+"")+1).setSelected(v.isSelected());
-                        ((TextView)((MainActivity)c).llNC.getChildAt(Integer.parseInt(tv.getTag()+"")-1)).setTextColor(Color.WHITE);
-                        ((TextView)((MainActivity)c).llNC.getChildAt(Integer.parseInt(tv.getTag()+""))).setTextColor(Color.WHITE);
-                        ((TextView)((MainActivity)c).llNC.getChildAt(Integer.parseInt(tv.getTag()+"")+1)).setTextColor(Color.WHITE);
-                        //d = getResources().getDrawable(R.drawable.bg_blk_green_c, null);
+                    for(int a=1; a<((MainActivity)c).llCalculation.getChildCount(); a++) {
+                        AnswerListItem ansV = (AnswerListItem)((MainActivity)c).llCalculation.getChildAt(a);
+                        JSONArray ja = new JSONArray(ansV.getOtherInfo());
+                        boolean found = false;
+                        if(ASelf.get(c).tvCInd<((MainActivity)c).llNC.getChildCount()-2) {
+                            if(ja.getInt(0)==ASelf.get(c).tvCInd||ja.getInt(1)==ASelf.get(c).tvCInd) {
+                                found=true;
+                            }
+                        } else {
+                            if(ja.getInt(2)==ASelf.get(c).tvCInd) {found=true;}
+                        }
+                        if(found) {
+                            ansV.callOnClick();
+                            ((MainActivity)c).svC.smoothScrollTo(0,Math.round(ansV.getY()));
+                            break;
+                        }
                     }
-                }
-                        } 
-                    //tvCurrent.setBackground(d);
-                    //tvCurrent.setTextColor(clr);
-                    //int arrIInd=0;
-                    //if(arr.size()-1>=1){arrIInd=arr.size()-1;}else{arrIInd=0;}
-                    if(((TextView)((MainActivity)c).llNC.getChildAt(calcCount)).getText().toString().equals("=")) {
-                        ((TextView)((MainActivity)c).llNC.getChildAt(ASelf.get(c).arr.size())).setBackground(c.getResources().getDrawable(R.drawable.bg_accent_c, null));
-                        ((TextView)((MainActivity)c).llNC.getChildAt(ASelf.get(c).arr.size())).setTextColor(Color.WHITE);
-                    
-                        double v1 = (Double.parseDouble(tv.getTag()+"")/2.0)+0.5;
-                        v1=(v1+"").endsWith(".5")?v1-0.5:v1;
-                        int v2 = Integer.parseInt((v1+"").replace(".0",""));
-                        if(v2-1<0){v2=0;}else{v2=v2-1;}
-                        v2+=1;
-                        ((AnswerListItem)((MainActivity)c).llCalculation.getChildAt(v2)).setSelected(true);
-                        if(((MainActivity)c).llCalculation.getChildCount()-1>=v2) {
-                            ((AnswerListItem)((MainActivity)c).llCalculation.getChildAt(v2)).tvAnsNr.setTextColor(Color.BLACK);
-                            ((AnswerListItem)((MainActivity)c).llCalculation.getChildAt(v2)).tvAnsCalc.setTextColor(Color.BLACK);
                         }
-                            
-                        try {
-                            int scrollTo=0;
-                            scrollTo = Math.round(((MainActivity)c).llNC.getChildAt(Integer.parseInt(tv.getTag().toString())-2).getX());
-                            ((MainActivity)c).hsvNC.smoothScrollTo(scrollTo,0);
-                            //svC.smoothScrollTo(0,((int)llCalculation.getChildAt(v2).getHeight() * v2)-tvCTitle.getHeight());
-                        } catch(Exception ex) {
-                            ex.printStackTrace();
-                        }
-                        ((MainActivity)c).svC.smoothScrollTo(0,Math.round(((MainActivity)c).llCalculation.getChildAt(v2).getY()));
-                     }
-                	} catch(Exception ex) {
+            } catch(Exception ex) {
                     ex.printStackTrace();
-                            //Toast.makeText(c, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(c, ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        
-          /*tv.addTextChangedListener(new TextWatcher() {
-									String txtb="";
-									@Override
-										   public void beforeTextChanged(CharSequence t, int a, int b, int cc) {
-																		txtb=t.toString();
-											 }
-															
-										   @Override
-									     public void onTextChanged(CharSequence t, int a, int b, int cc) {
-										       try {
-                            if(ASelf.get(c).arr.size()<((MainActivity)c).llNC.getChildCount()){//(((TextView)((MainActivity)c).llNC.getChildAt(((MainActivity)c).llNC.getChildCount()-1)).getText().toString().equals("=")) {
-                                t="=";
-                            }
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                            Toast.makeText(c, ex.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    			
-										   @Override
-									     public void afterTextChanged(Editable e) {
-																		
-											  }
-                });*/
+
         ((MainActivity)c).llNC.addView(tv, indx);
         
         //hsvNC.smoothScrollTo(llNC.getChildAt(Integer.parseInt(tv.getTag()+"")).getWidth()*llNC.getChildCount(),0);
         //Toast.makeText(getApplicationContext(), "ll = " + llNC.getChildAt(Integer.parseInt(tv.getTag()+"")).getWidth()+ ", llCC = " + llNC.getChildAt(Integer.parseInt(tv.getTag()+"")).getLayoutParams().width, Toast.LENGTH_SHORT).show();
         } catch(Exception ex) {
             ex.printStackTrace();
-            //Toast.makeText(c, ex.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(c, ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return tv;
     }
@@ -201,56 +143,44 @@ public class CurrentComponents {
             //((MainActivity)c).registerForContextMenu(tv);
         
             LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        //lp.height = LayoutParams.WRAP_CONTENT;
-        //lp.width = LayoutParams.MATCH_PARENT;
-        //tv.setPadding(14,14,14,14);
-        tv.setLayoutParams(lp);
-        
-        //Drawable d = getResources().getDrawable(R.drawable.bg_grey_green_cc, null);
-        Drawable d = c.getResources().getDrawable(R.drawable.bg_grey_green_s, null);
-        int clr = Color.parseColor("#EEFFFFFF");
-            try {
-                if(Ut.jsonContainsP(jo, ASelf.Calculation.dType.toString())&&
-                    jo.getInt(ASelf.Calculation.dType.toString())==1) {
-                    //d=getResources().getDrawable(R.drawable.bg_accent_cc, null);
-                    d=c.getResources().getDrawable(R.drawable.bg_accent_s, null);
-                    //clr = Color.BLACK;
+            tv.setLayoutParams(lp);
+
+            //Drawable d = getResources().getDrawable(R.drawable.bg_grey_green_cc, null);
+            Drawable d = c.getResources().getDrawable(R.drawable.bg_grey_green_s, null);
+            int clr = Color.parseColor("#EEFFFFFF");
+                try {
+                    if(Ut.jsonContainsP(jo, ASelf.Calculation.dType.toString())&&
+                        jo.getInt(ASelf.Calculation.dType.toString())==1) {
+                        //d=getResources().getDrawable(R.drawable.bg_accent_cc, null);
+                        d=c.getResources().getDrawable(R.drawable.bg_accent_s, null);
+                        //clr = Color.BLACK;
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    //d = getResources().getDrawable(R.drawable.bg_grey_green_cc, null);
+                    d = c.getResources().getDrawable(R.drawable.bg_grey_green_s, null);
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                //d = getResources().getDrawable(R.drawable.bg_grey_green_cc, null);
-                d = c.getResources().getDrawable(R.drawable.bg_grey_green_s, null);
-            }
-        
-        tv.setAlpha(((MainActivity)c).placeholders?0.5f:1f);
-        tv.setGravity(Gravity.CENTER);
-        tv.rlALI.setBackground(d);
-        tv.tvAns.setTextColor(clr);
-        //tv.tvAnsNr.setText("@"+(ASelf.isNumber(jo.getString(ASelf.Calculation.Ix.toString()))?jo.getString(ASelf.Calculation.LmtIx.toString()):jo.getString(ASelf.Calculation.Ix.toString())));
-        tv.tvAnsNr.setText("@"+jo.getString(ASelf.Calculation.LmtIx.toString()));
-        tv.tvAnsCalc.setText(jo.getString(ASelf.Calculation.Exp.toString()));
+
+            tv.setAlpha(((MainActivity)c).placeholders?0.5f:1f);
+            tv.setGravity(Gravity.CENTER);
+            tv.rlALI.setBackground(d);
+            tv.tvAns.setTextColor(clr);
+            //tv.tvAnsNr.setText("@"+(ASelf.isNumber(jo.getString(ASelf.Calculation.Ix.toString()))?jo.getString(ASelf.Calculation.LmtIx.toString()):jo.getString(ASelf.Calculation.Ix.toString())));
+            tv.tvAnsNr.setText("@"+jo.getString(ASelf.Calculation.LmtIx.toString()));
+            tv.tvAnsCalc.setText(jo.getString(ASelf.Calculation.Exp.toString()));
         
             tv.tvAns.setText(Ut.jsonContainsP(jo, ASelf.Calculation.ExpAns.toString())?jo.getString(ASelf.Calculation.ExpAns.toString()):jo.getString(ASelf.Calculation.DoneCalc.toString()));
-        tv.setTag(((MainActivity)c).llCalculation.getChildCount()+"");
+            //tv.setTag(((MainActivity)c).llCalculation.getChildCount()+"");
             if(ASelf.isNumber(jo.getString(ASelf.Calculation.Ix.toString()))) {
                 tv.setOnClickListener(onAnsCalcClick(c, Integer.parseInt(jo.getString(ASelf.Calculation.Ix.toString()))));
-                tv.tvAnsCalc.setOnClickListener(onAnsCalcClick(c, Integer.parseInt(jo.getString(ASelf.Calculation.Ix.toString()))));
+                //tv.tvAnsCalc.setOnClickListener(onAnsCalcClick(c, Integer.parseInt(jo.getString(ASelf.Calculation.Ix.toString()))));
+                tv.setOnLongClickListener(onExpCopyClick(c));
             }
-            //tv.tvAnsCalc.setOnLongClickListener(onExpCopyClick(c));
-        tv.tvAns.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Toast.makeText(c, tv.tvAnsNr.getText().toString()+"="+((TextView)v).getText().toString(), Toast.LENGTH_SHORT).show();
-                
-                } catch(Exception ex) {
-                    Toast.makeText(c, ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        ((MainActivity)c).llCalculation.addView(tv);
-        
-        return tv;
+            if(jo.has(c.getResources().getString(R.string.answer_for)))
+            {tv.setOtherInfo(jo.get(c.getResources().getString(R.string.answer_for)).toString());}
+            ((MainActivity)c).llCalculation.addView(tv);
+
+            return tv;
         } catch(Exception ex) {ex.printStackTrace(); Toast.makeText(c, ex.getMessage(), Toast.LENGTH_SHORT).show();}
         
         return null;
@@ -266,26 +196,41 @@ public class CurrentComponents {
             @Override
             public void onClick(View v) {
                 try {
-                    if(((MainActivity)c).llCalculation.getChildCount()>0) {
-                    if(ASelf.get(c).hcb) {
-                        ((MainActivity)c).clearC();
-                        ASelf.get(c).onSaved(c, ansIndx, ((MainActivity)c).llCalculation, ((MainActivity)c).tvDoneCalculation);
-                        ASelf.get(c).setHCB(false);
-                        //Toast.makeText(c, ansIndx+":@", Toast.LENGTH_SHORT).show();
-                    } else {
-                        ((MainActivity)c).clearCTVS();
-                        if(!((MainActivity)c).llCalculation.getChildAt(((MainActivity)c).llCalculation.getChildCount()-1).equals(v)) {
-                        ((MainActivity)c).llCalculation.getChildAt(ansIndx).setSelected(true);
-                        for(int x=0;x<((MainActivity)c).llCalculation.getChildCount(); x++) {
-                            if(((MainActivity)c).llCalculation.getChildAt(x).isSelected()) {
-                            ((TextView)((MainActivity)c).llNC.getChildAt((x)*2)).callOnClick();
-                            break;
-                        }
-                    }
-                        //tv.tvAns.setTextColor(Color.BLACK);
-                    } //else {
-                      //  ((AnswerListItem)v).tvAns.setTextColor(Color.WHITE);
-                      //  }
+                    if (((MainActivity) c).llCalculation.getChildCount() > 0) {
+                        if (ASelf.get(c).hcb) {
+                            ((MainActivity) c).clearC();
+                            ASelf.get(c).onSaved(c, ansIndx, ((MainActivity) c).llCalculation, ((MainActivity) c).tvDoneCalculation);
+                            ASelf.get(c).setHCB(false);
+                            //Toast.makeText(c, ansIndx+":@", Toast.LENGTH_SHORT).show();
+                        } else {
+                            ((MainActivity) c).clearCTVS();
+                            if (!((MainActivity) c).llCalculation.getChildAt(((MainActivity) c).llCalculation.getChildCount() - 1).equals(v)) {
+                                ((MainActivity) c).llCalculation.getChildAt(ansIndx).setSelected(true);
+                                for (int n = 0; n < ((MainActivity) c).llNC.getChildCount(); n++) {
+                                    ((MainActivity) c).llNC.getChildAt(n).setSelected(false);
+                                }
+                                for (int x = 1; x < ((MainActivity) c).llCalculation.getChildCount(); x++) {
+                                    AnswerListItem ansV = (AnswerListItem) ((MainActivity) c).llCalculation.getChildAt(x);
+                                    if (ansV.isSelected()) {
+                                        int showIndx=0;
+                                        JSONArray ja = new JSONArray(ansV.getOtherInfo());
+                                        if (ja.length() > 0)
+                                            ((MainActivity)c).llNC.getChildAt(ja.getInt(0)).setSelected(true);
+                                        if (ja.length() > 1) {
+                                            ((MainActivity)c).llNC.getChildAt(ja.getInt(1)).setSelected(true);
+
+                                            //showIndx = ((MainActivity) c).llNC.getChildAt(ja.getInt(0)).getX()<((MainActivity) c).hsvNC.getScrollX()?ja.getInt(0):ja.getInt(1);
+                                        }
+                                        if (ja.length() > 2) {
+                                            ((MainActivity)c).llNC.getChildAt(ja.getInt(2)).setSelected(true);
+                                            //showIndx = ((MainActivity) c).llNC.getChildAt(ja.getInt(0)).getX()<0?ja.getInt(0):ja.getInt(2);
+                                        }
+                                        ((MainActivity)c).svC.smoothScrollTo(0, Math.round(ansV.getY()));
+                                        ((MainActivity)c).hsvNC.smoothScrollTo(Math.round(((MainActivity) c).llNC.getChildAt(ja.getInt(0)).getX()), 0);
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
                 } catch(Exception ex) {
@@ -294,22 +239,40 @@ public class CurrentComponents {
             }
         };
     }
-    /*
-    public static View.OnLongClickListener onExpCopyClick(Context c) {
+
+    public static View.OnLongClickListener onExpCopyClick(final Context c) {
         return new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public boolean onLongClick(final View v) {
                 try {
-                    v.showContextMenu();
+                    new AlertDialog.Builder(c)
+                            .setItems(R.array.copy_express, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ClipboardManager cm = (ClipboardManager)c.getSystemService(Context.CLIPBOARD_SERVICE);
+                                    switch(which) {
+                                        case 0:
+                                            cm.setText(((AnswerListItem)v).tvAnsCalc.getText().toString());
+                                            Toast.makeText(c, "Copied: '" + ((AnswerListItem)v).tvAnsCalc.getText().toString()+"'", Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case 1:
+                                            cm.setText(((AnswerListItem)v).tvAns.getText().toString());
+                                            Toast.makeText(c, "Copied: '" + ((AnswerListItem)v).tvAns.getText().toString()+"'", Toast.LENGTH_SHORT).show();
+                                            break;
+                                    }
+                                }
+                            })
+                            .create().show();
                 } catch(Exception ex) {
                     ex.printStackTrace();
+                    Toast.makeText(c, ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-                
+
                 return true;
             }
         };
     }
-    */
+
     public static void tvCalcTitle(final Context c, String s) {
         TextView tv = new TextView(c);
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);

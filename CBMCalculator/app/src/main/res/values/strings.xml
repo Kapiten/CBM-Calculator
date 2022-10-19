@@ -28,6 +28,7 @@
     <string name="symbols_color">Color_Symbols</string>
     <string name="symbols_textc">Textc_Symbols</string>
     <string name="default_theme_color">Color_Default_Theme</string-->
+    <string name="answer_for">AnswerFor</string>
     
     <string-array name="app_settings">
         <item>@string/stand_by_example_switch</item>
@@ -60,5 +61,11 @@
     </string-array>
     
     <string name="alt_answer">Alternative Answer</string>
+    <string name="MADS">×,+,÷,-</string>
+
+    <string-array name="copy_express">
+        <item>Copy Expression</item>
+        <item>Copy Answer</item>
+    </string-array>
 
 </resources>

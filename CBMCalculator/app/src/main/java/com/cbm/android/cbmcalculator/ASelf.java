@@ -1,10 +1,13 @@
 package com.cbm.android.cbmcalculator;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
@@ -142,9 +145,9 @@ public class ASelf {
         arrSigns.add("÷");
         arrSigns.add("e");
         arrSigns.add("√");
-        arrSigns.add("cos");
-        arrSigns.add("sin");
-        arrSigns.add("tan");
+        //arrSigns.add("cos");
+        //arrSigns.add("sin");
+        //arrSigns.add("tan");
         
         return arrSigns;
     }
@@ -533,10 +536,17 @@ public class ASelf {
                 if(arr.size()-1>=0) {
                     if (isNumber(arr.get(arr.size() - 1))) {
                         if (str.equals("%")) {
-                            arr.add("×");
-                            arr.add("0.01");
-                            CurrentComponents.addCurrentTV(c, "×", 2);
-                            CurrentComponents.addCurrentTV(c, "0.01");
+                            if(arr.size()>1&&(arr.contains("/")||arr.contains("÷"))) {
+                                arr.add("×");
+                                arr.add("100");
+                                CurrentComponents.addCurrentTV(c, "×", 2);
+                                CurrentComponents.addCurrentTV(c, "100");
+                            } else {
+                                arr.add("×");
+                                arr.add("0.01");
+                                CurrentComponents.addCurrentTV(c, "×", 2);
+                                CurrentComponents.addCurrentTV(c, "0.01");
+                            }
                         } else {
                             if (tvCInd <= arr.size()) arr.add(tvCInd + 1, str);
                             else arr.add(str);
@@ -597,7 +607,7 @@ public class ASelf {
                         } else {
                                     double anso = 0;
                             if(x>1)anso = Double.parseDouble(aSelf.arr.get(x));
-                            ans = aSelf.calculate(currentSign, ans, anso);
+                            ans = ASelf.calculate(currentSign, ans, anso);
                             
             }}
         //FA=mDF.format(Double.parseDouble(ans+""));
@@ -613,105 +623,151 @@ public class ASelf {
         }} catch (Exception ex) {ex.printStackTrace();}
     }
     
-    public double calculate(String s, double ans, double ans2) {
+    public static double calculate(String s, double ans, double ans2) {
         switch(s) {
-                                case "+":
-                                    ans = ans + ans2;
-                                    break;
-                                case "-":
-                                    ans = ans - ans2;
-                                    break;
-                                case "×":
-                                    ans = ans * ans2;
-                                    break;
-                                case "÷":
-                               ans = ans / ans2;
-                                    break; 
-            case "%": 
-                            ans = ans * 0.01;
+            case "+":
+                ans = ans + ans2;
                 break;
-                        case "√":
-                                ans=Math.pow(ans2, Double.parseDouble((1.0/ans)+""));
-                ans=(ans+"").contains(".9999999999")?Math.round(ans):ans;
-                                    break;
-                          case "e":
-                                ans=Math.pow(ans, ans2);
-                        break;
-                                default:
-                                    ans = ans + ans2;
-                                    break;
-                            }
+            case "-":
+                ans = ans - ans2;
+                break;
+            case "×":
+                ans = ans * ans2;
+                break;
+            case "÷":
+                ans = ans / ans2;
+                break;
+            case "%":
+                ans = ans * 0.01;
+                break;
+            case "√":
+                ans = Math.pow(ans2, Double.parseDouble((1.0 / ans) + ""));
+                ans = (ans + "").contains(".9999999999") ? Math.round(ans) : ans;
+                break;
+            case "e":
+                ans = Math.pow(ans, ans2);
+                break;
+            default:
+                ans = ans + ans2;
+                break;
+        }
                          
         return ans;
     }
     
-    public void getTheSaved(Context c, View... vs) {
-        try{
-            SharedPreferences sph = ASelf.getCalcHistory(c);
-            int ssz = Integer.parseInt(ASelf.getCalcSet(c).getString(c.getResources().getString(R.string.history_limit_textn),"10"));
+    public void getTheSaved(final Context c, final View... vs) {
+        new AsyncTask<String, String, String>() {
+            ProgressDialog pd = new ProgressDialog(c);
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                pd.show();
+            }
+
+            @Override
+            protected String doInBackground(String... params) {
+                try{
+                    SharedPreferences sph = ASelf.getCalcHistory(c);
+                    int ssz = Integer.parseInt(ASelf.getCalcSet(c).getString(c.getResources().getString(R.string.history_limit_textn),"10"));
                     int sz = Math.min(ssz, sph.getAll().size());
                     //sz=ssz<=sph.getAll().size()?ssz:sph.getAll().size();
-                //int b = -1;
-                         //Toast.makeText(c, "Limit: " +sz+" & All Size: " +sph.getAll().size(), Toast.LENGTH_SHORT).show();
-                         if(sz>0) {
-            for(int b = 0; b<sz; b++) {
-                    //while(((LinearLayout)vs[0]).getChildCount()!=sz) {
-                    final int bb = b; 
-                    String str = "";
-                    //String ttl = sph.getAll().size()>=1?(sph.getAll().size()-bb)+"":"1";
-                    String ttl = (sph.getAll().size()-bb)+"";
-                    List<String> l = (List<String>)Ut.toArray(sph.getString("jsonCalc"+(sph.getAll().size()-bb), ""));
-                    //if(bb==-1){ttl="1";l=(List<String>)Ut.toArray(sph.getString("jsonCalcA"+1, ""));}
-                    //Toast.makeText((MainActivity)c, "List: " +l+" & All Size: " +l.toArray(new String[sph.getAll().size()]), Toast.LENGTH_SHORT).show();
-                         if(l!=null) {
-                    for(int x = 0; x<l.size(); x++) {
-                        str += l.get(x).toString();
-                    }
-                }           
-                        try{
-                            if(!str.isEmpty()){
-                    CurrentComponents.addCalculatedTV((MainActivity)c,
-                                new JSONObject()
-                                    .put(ASelf.Calculation.Ix.toString(), ttl)
-                                    .put(ASelf.Calculation.LmtIx.toString(), sz-bb)
-                                    .put(ASelf.Calculation.Exp.toString(), str)
-                                    .put(ASelf.Calculation.ExpAns.toString(), "")
-                                    .put(ASelf.Calculation.DoneCalc.toString(), ""));
-                            }	else {
+                    //int b = -1;
+                    //Toast.makeText(c, "Limit: " +sz+" & All Size: " +sph.getAll().size(), Toast.LENGTH_SHORT).show();
+                    if(sz>0) {
+                        for(int b = 0; b<sz; b++) {
+                            //while(((LinearLayout)vs[0]).getChildCount()!=sz) {
+                            final int bb = b;
+                            String str = "";
+                            //String ttl = sph.getAll().size()>=1?(sph.getAll().size()-bb)+"":"1";
+                            String ttl = (sph.getAll().size()-bb)+"";
+                            String[] answer = new String[2];
+                            List<String> l = (List<String>)Ut.toArray(sph.getString("jsonCalc"+(sph.getAll().size()-bb), ""));
+                            //if(bb==-1){ttl="1";l=(List<String>)Ut.toArray(sph.getString("jsonCalcA"+1, ""));}
+                            //Toast.makeText((MainActivity)c, "List: " +l+" & All Size: " +l.toArray(new String[sph.getAll().size()]), Toast.LENGTH_SHORT).show();
+                            if(l!=null&&l.size()>0) {
+                                answer = ASelf.calculation(l);
+                            }
+                            try{
+                                if(!answer[0].isEmpty()) {
+                                    publishProgress(ttl, String.valueOf(sz - bb), answer[0], answer[1]);
+                                } else {
                                     sph.edit().remove("jsonCalc"+b);
-                    sph.edit().apply();
+                                    sph.edit().apply();
                                 }
-                            //b+=1;
-                          }
-                        catch(Exception ex) {
-                           ex.printStackTrace();
-                              Toast.makeText((MainActivity)c, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                                //b+=1;
+                            }
+                            catch(Exception ex) {
+                                ex.printStackTrace();
+                                //Toast.makeText((MainActivity)c, ex.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                     /*Handler h = new Handler(this.getMainLooper());
                         h.postDelayed(new Runnable() {
                             @Override
                             public void run() {},0);*/
+                        }
+                    }
+                    //return ja;
+                } catch(Exception ex) {
+                    ex.printStackTrace();
+                    //Toast.makeText((MainActivity)c, ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-                    vs[1].setAlpha(standBy?0.5f:1f);
-                    ((TextView)vs[1]).setText("Select an expression");
+                return null;
             }
-        //return ja;
-        } catch(Exception ex) {
-            ex.printStackTrace();
-            Toast.makeText((MainActivity)c, ex.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+
+            @Override
+            protected void onProgressUpdate(final String... values) {
+                super.onProgressUpdate(values);
+                    new Handler(c.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                            CurrentComponents.addCalculatedTV((MainActivity) c,
+                                    new JSONObject()
+                                            .put(ASelf.Calculation.Ix.toString(), values[0])
+                                            .put(ASelf.Calculation.LmtIx.toString(), Integer.parseInt(values[1]))
+                                            .put(ASelf.Calculation.Exp.toString(), values[2])
+                                            .put(ASelf.Calculation.ExpAns.toString(), values[3])
+                                            .put(ASelf.Calculation.DoneCalc.toString(), ""));
+                            } catch(Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    });
+
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                vs[1].setAlpha(standBy?0.5f:1f);
+                ((TextView)vs[1]).setText("Select an expression");
+
+                pd.dismiss();
+            }
+        }.execute();
+
+
     }
     
-    public void calculation(List lst, List lstA) {
-        for(int x=0;x<lst.size();x++) {
-            if(isNumber(lst.get(x)+"")) {
-                if((lst.get(x)+"").contains(".")) {
-                    lst.set(x,Double.parseDouble(String.valueOf(lst.get(x))));
-                } else {
-                    lst.set(x,Integer.parseInt(String.valueOf(lst.get(x))));
-                }
+    public static String[] calculation(List<String> l) {
+        String answer[] = new String[]{"","0"};
+        double ans = Double.parseDouble(l.get(0));
+        String currentSign = "!+";
+        for(int x = 0; x<l.size(); x++) {
+            answer[0] += l.get(x);
+            if(!ASelf.isNumber(l.get(x))) {
+                currentSign = l.get(x);
+                //ans = ans + Integer.parseInt(aSelf.arr.get(x+1));
+            } else {
+                double anso = 0;
+                if(x>1)anso = Double.parseDouble(l.get(x));
+                ans = ASelf.calculate(currentSign, ans, anso);
             }
         }
+        answer[1] = String.valueOf(ans);
+        answer[1] = answer[1].endsWith(".0")?String.valueOf(Math.round(ans)):answer[1];
+
+        return answer;
     }
     
     public int getSBEg(Context c) {

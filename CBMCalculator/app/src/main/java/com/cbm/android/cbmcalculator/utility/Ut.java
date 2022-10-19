@@ -1,5 +1,7 @@
 package com.cbm.android.cbmcalculator.utility;
 
+import com.cbm.android.cbmcalculator.ASelf;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
@@ -61,18 +63,49 @@ public class Ut {
     
     public static ArrayList<String> toCalculationType(ArrayList<String> arr, String[] mSigns) {
         ArrayList<String> lst = new ArrayList<>();
+        lst.addAll(arr);
+
+        //boolean firstIndexAdded = false;
+
+        //if(arr.get(0).contains("-")){arr2.add(0,"-");} else {arr2.add(0,"+");}
         for(String s: mSigns) {
-            for(int x = 0; x < arr.size(); x++) {
+            int x = 0;
+            if(!lst.contains(s)){continue;}
+            while(true) {
+                if (lst.get(x).equals(s)) {
+                    double ans = ASelf.calculate(s, Double.parseDouble(lst.get(x-1)), Double.parseDouble(lst.get(x+1)));
+                    String fa = String.valueOf(String.valueOf(ans).endsWith(".0")?String.valueOf(ans).replace(".0",""):ans);
+                    lst.set(x-1, fa);
+                    lst.remove(x+1);lst.remove(x);
+                }
+                x+=1;
+                if (x >= lst.size()) {
+                    break;
+                }
+            }
+            /*for(int x = 0; x < arr.size(); x++) {
                 if(arr.get(x).equals(s)) {
-                    boolean nega = false;
-                    if(x-2>=0){if(arr.get(x-2).equals("-")){nega=true;}}
-                    
+                    //boolean nega = false;
+                    //if(x-2>=0){if(arr.get(x-2).equals("-")){nega=true;}}
                     if(lst.size()==0){lst.add(lst.size(), arr.get(x-1));}
                     lst.add(lst.size(), arr.get(x));
                     lst.add(lst.size(), arr.get(x+1));
-                
+                    if(lst.size()==0&&((x-2>0)&&!(arr.get(x-2).equals("÷")||arr.get(x-2).equals("×"))))
+                    {lst.add(lst.size(), arr.get(x-1));}
+                    else if(x-1==0){if(lst.size()!=0){lst.add(lst.size(), "+");}lst.add(lst.size(), arr.get(x-1));}
+                    lst.add(lst.size(), arr.get(x));
+                    lst.add(lst.size(), arr.get(x+1));
+                    if(!firstIndexAdded&&((arr.get(0).contains("-")&&s.equals("-"))||(Integer.parseInt(arr.get(0))>-1)&&s.equals("+"))) {
+                        if(arr.get(0).contains("-")){lst.add(lst.size(),"-");} else {lst.add(lst.size(),"+");}
+                        lst.add(lst.size(),arr.get(0));
+                        firstIndexAdded=true;
+                    } else {
+                        lst.add(lst.size(), arr.get(x));
+                        lst.add(lst.size(), arr.get(x+1));
+                    }
+
                 }
-            }
+            }*/
         }
         
         return lst;
