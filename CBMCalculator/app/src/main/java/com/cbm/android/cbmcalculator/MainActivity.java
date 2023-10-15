@@ -38,7 +38,6 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
     private ASelf aSelf;
-    
     private AlertDialog ad;
     public Button btnSignChange, btnEquals, btnPoint, btnMASMD, btnPercentage, btnHistory, btnSettings;
     
@@ -673,8 +672,7 @@ public class MainActivity extends AppCompatActivity {
                             .put(getResources().getString(R.string.answer_for), new JSONArray().put(aSelf.arr.size()).toString()));
                         //new String[]{"FA", "Final Answer: @"+cAns+"=", ans+""}), 1);
                         if(llCalculation.getChildCount()>0){
-                            if(tvDoneCalculation.getAlpha()!=1)
-                            tvDoneCalculation.setText(tvDoneCalculation.getText().toString() + " | Write an expression");
+                            if(tvDoneCalculation.getAlpha()!=1) {tvDoneCalculation.setText(tvDoneCalculation.getText().toString() + " | Write an expression");}
                             standByPH+=" +Example";
                             
                         }
