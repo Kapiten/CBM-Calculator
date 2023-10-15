@@ -12,7 +12,9 @@
         android:icon="@drawable/ic_launcher"
         android:theme="@style/AppTheme"
         android:supportsRtl="true">
-        <activity android:name="com.cbm.android.cbmcalculator.MainActivity" android:label="@string/app_name">
+        <activity android:name="com.cbm.android.cbmcalculator.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

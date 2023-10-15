@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CBM Calculator</string>
+    <string name="stand_by_example_switch">Switch_Stand_By_+Example</string>
+    <string name="stand_by_example_expression_text">Text_Stand_By_+Example</string>    
+    <string name="decimal_always_switch">Switch_Numbers_+Decimal_Always</string>
+    <string name="stand_by_example_default_expression_texttcn">TextTCN_Stand_By_+Example_Default_Expression</string>
+    <string name="stand_by_example_default_expression_text">Text_Example_Default_Expression</string>
+    <string name="history_limit_textn">Textn_History_+History_Limit</string>
+    <string name="history_limit_text">Text_History_Limit</string>
+    <string name="decimal_count_textn">Textn_Numbers_+Decimal_Count</string>
+    <string name="history_carry_answer_switch">Switch_History_+Carry_Answer</string>
+    <!--string name="decimal_currency_text">Switch_Numbers_+Decimal_Currency</string>
+    <string name="background_color">Color_Background</string>
+    <string name="background_textc">Textc_Background</string>
+    <string name="background_entry_color">Color_Background_Entry</string>
+    <string name="background_entry_textc">Textc_Background_Entry</string>
+    <string name="background_toolbar_color">Color_Background_Toolbar</string>
+    <string name="background_toolbar_textc">Textc_Background_Toolbar</string>
+    <string name="answer_color">Color_Answer</string>
+    <string name="answer_textc">Textc_Answer</string>
+    <string name="calculation_now_color">Color_Calculation_Now</string>
+    <string name="calculation_now_textc">Textc_Calculation_Now</string>
+    <string name="calculation_details_color">Color_Calculation_Details</string>
+    <string name="calculation_details_textc">Textc_Calculation_Details</string>
+    <string name="numbers_color">Color_Numbers</string>
+    <string name="numbers_textc">Textc_Numbers</string>
+    <string name="symbols_color">Color_Symbols</string>
+    <string name="symbols_textc">Textc_Symbols</string>
+    <string name="default_theme_color">Color_Default_Theme</string-->
+    <string name="answer_for">AnswerFor</string>
+    
+    <string-array name="app_settings">
+        <item>@string/stand_by_example_switch</item>
+        <item>@string/stand_by_example_expression_text</item>
+        <item>@string/stand_by_example_default_expression_text</item>
+        <item>@string/stand_by_example_default_expression_texttcn</item>
+        <item>@string/history_limit_textn</item>
+        <item>@string/history_limit_text</item>
+        <item>@string/history_carry_answer_switch</item>
+        <item>@string/decimal_always_switch</item>
+        <item>@string/decimal_count_textn</item>
+        <!--item>@string/decimal_currency_text</item>
+        <item>@string/background_color</item>
+        <item>@string/background_textc</item>
+        <item>@string/background_entry_color</item>
+        <item>@string/background_entry_textc</item>
+        <item>@string/background_toolbar_color</item>
+        <item>@string/background_toolbar_textc</item>
+        <item>@string/answer_color</item>
+        <item>@string/answer_textc</item>
+        <item>@string/calculation_now_color</item>
+        <item>@string/calculation_now_textc</item>
+        <item>@string/calculation_details_color</item>
+        <item>@string/calculation_details_textc</item>
+        <item>@string/numbers_color</item>
+        <item>@string/numbers_textc</item>
+        <item>@string/symbols_color</item>
+        <item>@string/symbols_textc</item>
+        <item>@string/default_theme_color</item-->
+    </string-array>
+    
+    <string name="alt_answer">Alternative Answer</string>
+    <string name="MADS">×,+,÷,-</string>
+
+    <string-array name="copy_express">
+        <item>Copy Expression</item>
+        <item>Copy Answer</item>
+    </string-array>
+
+</resources>

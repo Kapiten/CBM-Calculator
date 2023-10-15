@@ -332,14 +332,14 @@ public class ASelf {
     }
     
     public void setEntryNumberColors(Context c, int bgColor, int tColor) {
-        switch(bgColor) {
-            case R.drawable.bg_white: bgColor=R.drawable.bg_white_green; break;
-            case R.drawable.bg_white_s: bgColor=R.drawable.bg_white_green_s; break;
-            case R.drawable.bg_white_r: bgColor=R.drawable.bg_white_green_r; break;
-            case R.drawable.bg_white_sr: bgColor=R.drawable.bg_white_green_sr; break;
-            case R.drawable.bg_white_ss: bgColor=R.drawable.bg_white_green_ss; break;
-            
-        }
+//        switch(bgColor) {
+//            case R.drawable.bg_white: bgColor=R.drawable.bg_white_green; break;
+//            case R.drawable.bg_white_s: bgColor=R.drawable.bg_white_green_s; break;
+//            case R.drawable.bg_white_r: bgColor=R.drawable.bg_white_green_r; break;
+//            case R.drawable.bg_white_sr: bgColor=R.drawable.bg_white_green_sr; break;
+//            case R.drawable.bg_white_ss: bgColor=R.drawable.bg_white_green_ss; break;
+//
+//        }
         
         LinearLayout llEntry = ((MainActivity)c).llEntry;
         for(int a = 0; a < llEntry.getChildCount(); a++) {
@@ -391,14 +391,13 @@ public class ASelf {
     }
     
     public void setSymbolColors(Context c, int bgColor, int tColor) {
-        switch(bgColor) {
-            case R.drawable.bg_black: bgColor=R.drawable.bg_black_blue; break;
-            case R.drawable.bg_black_s: bgColor=R.drawable.bg_black_blue_s; break;
-            case R.drawable.bg_black_r: bgColor=R.drawable.bg_black_blue_r; break;
-            case R.drawable.bg_black_sr: bgColor=R.drawable.bg_black_blue_sr; break;
-            case R.drawable.bg_black_ss: bgColor=R.drawable.bg_black_blue_ss; break;
-            
-        }
+//        switch(bgColor) {
+//            case R.drawable.bg_black: bgColor=R.drawable.bg_black_blue; break;
+//            case R.drawable.bg_black_s: bgColor=R.drawable.bg_black_blue_s; break;
+//            case R.drawable.bg_black_r: bgColor=R.drawable.bg_black_blue_r; break;
+//            case R.drawable.bg_black_sr: bgColor=R.drawable.bg_black_blue_sr; break;
+//            case R.drawable.bg_black_ss: bgColor=R.drawable.bg_black_blue_ss; break;
+//        }
         
         LinearLayout llEntry = ((MainActivity)c).llEntry;
         LinearLayout llToolbar = ((MainActivity)c).llToolbar;

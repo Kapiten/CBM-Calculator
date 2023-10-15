@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-    import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
@@ -14,6 +13,8 @@ import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.cbm.android.cbmcalculator.ASelf;
 import com.cbm.android.cbmcalculator.MainActivity;

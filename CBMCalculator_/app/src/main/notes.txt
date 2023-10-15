@@ -1,0 +1,12 @@
+CalculationNow(Panel)
+   Scrolls on expression highlight
+
+Calculations(Panel)
+   ExpressionHolder look and feel update
+      from Circle to Square
+
+Theme Colors are operational
+
+Settings is not fully functional, though design style is operational
+
+Decimal management
