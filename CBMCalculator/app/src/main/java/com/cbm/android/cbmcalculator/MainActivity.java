@@ -31,6 +31,7 @@ import com.cbm.android.cbmcalculator.extended.*;
 import com.cbm.android.cbmcalculator.settings.*;
 import com.cbm.android.cbmcalculator.utility.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public ScrollView svC, svScifra;
     
     private int currIndex = 0, cSI = 0, hc=0, bracketOpen=0, bracketIndex=0; //current Selected Index
-    private double bracketAnsw = 0;
+    private BigDecimal bracketAnsw = new BigDecimal(0);
     private String nowValue = "";
     public boolean isSFMShowing = false, 
     isDotd = false, hca=false, placeholders=false;
@@ -597,8 +598,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     
                     clearCTVS();
-                    double ans = Double.parseDouble(aSelf.arr.get(0));
-                    double ans2 = 0;
+                    BigDecimal ans = new BigDecimal(aSelf.arr.get(0));
+                    BigDecimal ans2 = new BigDecimal(0);
                     int cAns = 1, calcN=1;
                     String answ="", answ2="", answ3="";    
                     String currentSign = "!+";
@@ -618,8 +619,8 @@ public class MainActivity extends AppCompatActivity {
                             currentSign = aSelf.arr.get(x);
                             //ans = ans + Integer.parseInt(aSelf.arr.get(x+1));
                         } else {
-                            double anso = 0;
-                            if(x>1)anso = Double.parseDouble(aSelf.arr.get(x));
+                            BigDecimal anso = new BigDecimal(0);
+                            if(x>1)anso = new BigDecimal(aSelf.arr.get(x));
                             ans = ASelf.calculate(currentSign, ans, anso);
                             
                             String c = "";
@@ -630,9 +631,9 @@ public class MainActivity extends AppCompatActivity {
                                 answ2 = (ans+"").contains(".")?((ans+"").endsWith(".0")?Integer.parseInt((ans+"").replace(".0",""))+"":(ans+"")):(ans+"");
                                 answ3 = aSelf.arr.get(x);
                                 if(ASelf.getCalcSet(getApplicationContext()).getString(getResources().getString(R.string.decimal_always_switch), "Switch_Numbers_+Decimal_Always").equals("On")) {
-                                    answ = ASelf.mDF.format(Double.parseDouble(ans2+""));
-                                    answ2 = ASelf.mDF.format(Double.parseDouble(ans+""));
-                                    answ3 = ASelf.mDF.format(Double.parseDouble(aSelf.arr.get(x)));
+                                    answ = ASelf.mDF.format(new BigDecimal(ans2+""));
+                                    answ2 = ASelf.mDF.format(new BigDecimal(ans+""));
+                                    answ3 = ASelf.mDF.format(new BigDecimal(aSelf.arr.get(x)));
                                 }
                                 if(x>0) {
                                     CurrentComponents.addCalculatedTV(MainActivity.this, new JSONObject()
@@ -650,9 +651,9 @@ public class MainActivity extends AppCompatActivity {
                        //String answ = String.valueOf(ans).endsWith(".0")?String.valueOf(Integer.parseInt(ans+"")+""):String.valueOf(ans);
                         if(ASelf.getCalcSet(getApplicationContext()).getString(getResources().getString(R.string.decimal_always_switch),"").equals("On")) {
                                     //answ2 = ans+"";
-                        answ2 = ASelf.mDF.format(Double.parseDouble(ans+""));
+                        answ2 = ASelf.mDF.format(ans);
                                     }
-                        if(currentSign.equals("%"))answ=Double.parseDouble((ans)+"")+"("+(ans*100)+"%)";
+                        if(currentSign.equals("%"))answ=new BigDecimal((ans)+"")+"("+(ans.multiply(new BigDecimal(100)))+"%)";
                         tvDoneCalculation.setAlpha(placeholders?0.5f:1f);
                         tvDoneCalculation.setText(answ2);
                         if(ASelf.carryAnswer)aSelf.carriedAnswer=answ2;

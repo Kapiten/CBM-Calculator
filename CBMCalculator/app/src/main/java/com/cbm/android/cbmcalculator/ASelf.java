@@ -19,6 +19,8 @@ import com.cbm.android.cbmcalculator.R;
 import com.cbm.android.cbmcalculator.extended.*;
 import com.cbm.android.cbmcalculator.utility.*;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -384,7 +386,7 @@ public class ASelf {
         for(int a = 0; a < llToolbar.getChildCount(); a++) {
             llToolbar.getChildAt(a).setBackground(sdColor);
             if(llToolbar.getChildAt(a) instanceof Button)
-            ((Button)llToolbar.getChildAt(a)).setTextColor(tColor);
+            {((Button)llToolbar.getChildAt(a)).setTextColor(tColor);}
         
         }
         
@@ -594,8 +596,8 @@ public class ASelf {
     public void arrAct(Context c) {
         try {
             if(arr.size()>0) {
-        double ans = isNumber(aSelf.arr.get(0))?Double.parseDouble(aSelf.arr.get(0)):0;
-                    double ans2 = 0;
+        BigDecimal ans = isNumber(aSelf.arr.get(0))?new BigDecimal(aSelf.arr.get(0)):new BigDecimal(0);
+                BigDecimal ans2 = new BigDecimal(0);
                  String currentSign="", FA="", answ, answ2, answ3; 
         
         for(int x = 0; x < aSelf.arr.size(); x++) {
@@ -604,8 +606,8 @@ public class ASelf {
                             currentSign = aSelf.arr.get(x);
                             //ans = ans + Integer.parseInt(aSelf.arr.get(x+1));
                         } else {
-                                    double anso = 0;
-                            if(x>1)anso = Double.parseDouble(aSelf.arr.get(x));
+                            BigDecimal anso = new BigDecimal(0);
+                            if(x>1)anso = new BigDecimal(aSelf.arr.get(x));
                             ans = ASelf.calculate(currentSign, ans, anso);
                             
             }}
@@ -621,33 +623,36 @@ public class ASelf {
             ((MainActivity)c).tvDoneCalculation.setText(answ2 + " | Write an expression");
         }} catch (Exception ex) {ex.printStackTrace();}
     }
-    
+
     public static double calculate(String s, double ans, double ans2) {
+        return calculate(s, new BigDecimal(ans), new BigDecimal(ans2)).doubleValue();
+    }
+    public static BigDecimal calculate(String s, BigDecimal ans, BigDecimal ans2) {
         switch(s) {
             case "+":
-                ans = ans + ans2;
+                ans = ans.add(ans2);
                 break;
             case "-":
-                ans = ans - ans2;
+                ans = ans.subtract(ans2);
                 break;
             case "×":
-                ans = ans * ans2;
+                ans = ans.multiply(ans2);
                 break;
             case "÷":
-                ans = ans / ans2;
+                ans = ans.divide(ans2);
                 break;
             case "%":
-                ans = ans * 0.01;
+                ans = ans.multiply(new BigDecimal(0.01));
                 break;
             case "√":
-                ans = Math.pow(ans2, Double.parseDouble((1.0 / ans) + ""));
-                ans = (ans + "").contains(".9999999999") ? Math.round(ans) : ans;
+                ans = ans2.pow(ans.intValue());//Math.pow(ans2, Double.parseDouble((1.0 / ans) + ""));
+                //ans = (ans + "").contains(".9999999999") ? ans.round(MathContext.UNLIMITED)/*Math.round(ans)*/ : ans;
                 break;
             case "e":
-                ans = Math.pow(ans, ans2);
+                ans = ans.pow(ans2.intValue());
                 break;
             default:
-                ans = ans + ans2;
+                ans = ans.add(ans2);
                 break;
         }
                          
@@ -783,7 +788,7 @@ public class ASelf {
     }
     
     public static boolean isNumber(String s) {
-        try {Double.parseDouble(s); return true;}
+        try {new BigDecimal(s); return true;}
         catch(Exception ex){return false;}
     }
     
