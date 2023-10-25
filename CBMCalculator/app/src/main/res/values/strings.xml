@@ -62,6 +62,7 @@
     
     <string name="alt_answer">Alternative Answer</string>
     <string name="MADS">×,+,÷,-</string>
+    <string name="clear">Clear</string>
 
     <string-array name="copy_express">
         <item>Copy Expression</item>

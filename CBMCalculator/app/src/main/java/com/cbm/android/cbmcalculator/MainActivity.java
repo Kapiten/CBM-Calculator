@@ -286,9 +286,8 @@ public class MainActivity extends AppCompatActivity {
             btnHistory.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                          CBMOptions.funHistory(MainActivity.this, new Object[]{llCalculation, tvDoneCalculation});
-                        }
-                    });
+                        CBMOptions.funHistory(MainActivity.this, new Object[]{llCalculation, tvDoneCalculation});
+                    }});
                     //btnMASMD=((Button)findViewById(R.id.btnMASMD));
                     //btnMASMD.setEnabled(false);
             btnMASMD.setOnClickListener(new View.OnClickListener() {
@@ -300,23 +299,17 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             if (aSelf.arr.size() > 0&&aSelf.isStandBy()) {
                                 btnMASMD.setSelected(!btnMASMD.isSelected());
-                                if (btnMASMD.isSelected())
-                                    tvDoneCalculation.setText(Ut.toBodmas(aSelf.arr).get(0));
-                                else {
-                                    tvDoneCalculation.setText(ASelf.calculation(aSelf.arr)[1]);
-                                }
+                                if (btnMASMD.isSelected()) {tvDoneCalculation.setText(Ut.toBodmas(aSelf.arr).get(0));}
+                                else {tvDoneCalculation.setText(ASelf.calculation(aSelf.arr)[1]);}
                             }
-                        } catch(Exception ex) {
-                            Toast.makeText(MainActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-
+                        } catch(Exception ex) {Toast.makeText(MainActivity.this, ex.getMessage(), Toast.LENGTH_SHORT).show();}
                 }});
                ((Button)findViewById(R.id.btnMPie)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                             if(aSelf.isStandBy()){clearC(); aSelf.setStandBy(false);}
                             CBMOptions.funPie(MainActivity.this, null);
-    	                    }
+                        }
                     });
                 btnPercentage.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -327,7 +320,6 @@ public class MainActivity extends AppCompatActivity {
                                 //if(!aSelf.standBy&&ASelf.isNumber(ci>=0?aSelf.arr.get(ci):"1"))aSelf.entry(MainActivity.this,"%");
                                 //if(ASelf.isNumber(aSelf.arr.get(aSelf.arr.size()-1)))
                                 aSelf.entry(MainActivity.this,"%");
-                        
                             }
                         }
             });
@@ -787,6 +779,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
     }
+
+    public void clearCalculation(){llCalculation.removeAllViews();
+        tvDoneCalculation.setAlpha(0.5f);}
 
     public void clearC() {
         llNC.removeAllViews();

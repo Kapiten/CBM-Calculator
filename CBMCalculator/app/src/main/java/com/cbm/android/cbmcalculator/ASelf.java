@@ -68,9 +68,7 @@ public class ASelf {
     
     public ArrayList<View> getSettingViews(String setting) {
         ArrayList<View> arrV = new ArrayList<>();
-        if(setting.equals(settings[0])) {
-            
-        }
+        if(setting.equals(settings[0])) {}
         
         return arrV;
     }
@@ -239,7 +237,6 @@ public class ASelf {
                 for(int x = 0; x<l.size(); x++) {
                     String str = l.get(x).toString();
                     if(!str.isEmpty()){entry(c, str);}
-                        
                 }
             } else {
                     getTheSaved(c, vs[0]/*llCalculation*/, vs[1]/*tvDoneCalculation*/);
@@ -255,20 +252,18 @@ public class ASelf {
   
     public static void refresh(Context c) {
         try {
-        SharedPreferences sp = getCalcSet(c);
-        SharedPreferences.Editor ed = sp.edit();
-        for(String s: settings) {
-            int a = s.substring(0, s.indexOf("_")).equals("Color")?1:0;
-            if(!sp.contains(s)){
-                if(a==1){ed.putString(s,DefaultThemeSet.defaultBGFormats().get(0).getString(ASelf.Constants.DEFAULT_JSONCOLOR_BGCOLOR));
-                }else{ed.putString(s,"Off");}
-            }else	if(sp.contains(s)&&(sp.getInt(s,-1)<=0)){
-                ed.putString(s,DefaultThemeSet.defaultBGFormats().get(0).toString());
+            SharedPreferences sp = getCalcSet(c);
+            SharedPreferences.Editor ed = sp.edit();
+            for(String s: settings) {
+                int a = s.substring(0, s.indexOf("_")).equals("Color")?1:0;
+                if(!sp.contains(s)){
+                    if(a==1){ed.putString(s,DefaultThemeSet.defaultBGFormats().get(0).getString(ASelf.Constants.DEFAULT_JSONCOLOR_BGCOLOR));
+                    }else{ed.putString(s,"Off");}
+                }else	if(sp.contains(s)&&(sp.getInt(s,-1)<=0)){
+                    ed.putString(s,DefaultThemeSet.defaultBGFormats().get(0).toString());
+                }
             }
-        }
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
+        } catch(Exception ex) {ex.printStackTrace();}
     }
     
     public void setProperty(Context c, String s, String p) {
@@ -417,7 +412,7 @@ public class ASelf {
         for(int a = 0; a < llToolbar.getChildCount(); a++) {
             llToolbar.getChildAt(a).setBackgroundResource(bgColor);
             if(llToolbar.getChildAt(a) instanceof Button)
-            ((Button)llToolbar.getChildAt(a)).setTextColor(tColor);
+            {((Button)llToolbar.getChildAt(a)).setTextColor(tColor);}
         
         }
         
@@ -518,7 +513,7 @@ public class ASelf {
         if(((TextView)os[0]).getText().toString().isEmpty()||isNumber(((TextView)os[0]).getText().toString())) {
         if(!isStandBy()&&((TextView)os[0])!=null) {
         tvCInd = Integer.parseInt(((TextView)os[0]).getTag().toString());
-    			    if(str.equals("*")){str="×";}
+            if(str.equals("*")){str="×";}
             else if(str.equals("/")){str="÷";}
             //if(str.equals(".")){btnPoint.callOnClick(); return;}
             if(arr!=null&&((LinearLayout)os[1])!=null) {
@@ -596,21 +591,21 @@ public class ASelf {
     public void arrAct(Context c) {
         try {
             if(arr.size()>0) {
-        BigDecimal ans = isNumber(aSelf.arr.get(0))?new BigDecimal(aSelf.arr.get(0)):new BigDecimal(0);
+                BigDecimal ans = isNumber(aSelf.arr.get(0))?new BigDecimal(aSelf.arr.get(0)):new BigDecimal(0);
                 BigDecimal ans2 = new BigDecimal(0);
                  String currentSign="", FA="", answ, answ2, answ3; 
         
-        for(int x = 0; x < aSelf.arr.size(); x++) {
-                        ans2 = ans;
-                        if(!ASelf.isNumber(aSelf.arr.get(x))) {
-                            currentSign = aSelf.arr.get(x);
-                            //ans = ans + Integer.parseInt(aSelf.arr.get(x+1));
-                        } else {
-                            BigDecimal anso = new BigDecimal(0);
-                            if(x>1)anso = new BigDecimal(aSelf.arr.get(x));
-                            ans = ASelf.calculate(currentSign, ans, anso);
+                for(int x = 0; x < aSelf.arr.size(); x++) {
+                    ans2 = ans;
+                    if(!ASelf.isNumber(aSelf.arr.get(x))) {
+                        currentSign = aSelf.arr.get(x);
+                        //ans = ans + Integer.parseInt(aSelf.arr.get(x+1));
+                    } else {
+                        BigDecimal anso = new BigDecimal(0);
+                        if(x>1)anso = new BigDecimal(aSelf.arr.get(x));
+                        ans = ASelf.calculate(currentSign, ans, anso);
                             
-            }}
+                }}
         //FA=mDF.format(Double.parseDouble(ans+""));
                             //if(ans>=0||ans<=0) {
                                 answ = (ans2+"").endsWith(".0")?Integer.parseInt((ans2+"").substring(0, (ans2+"").indexOf(".")))+"":(ans2+"");
@@ -624,8 +619,8 @@ public class ASelf {
         }} catch (Exception ex) {ex.printStackTrace();}
     }
 
-    public static double calculate(String s, double ans, double ans2) {
-        return calculate(s, new BigDecimal(ans), new BigDecimal(ans2)).doubleValue();
+    public static BigDecimal calculate(String s, double ans, double ans2) {
+        return calculate(s, new BigDecimal(ans), new BigDecimal(ans2));
     }
     public static BigDecimal calculate(String s, BigDecimal ans, BigDecimal ans2) {
         switch(s) {
@@ -755,7 +750,7 @@ public class ASelf {
     
     public static String[] calculation(List<String> l) {
         String answer[] = new String[]{"","0"};
-        double ans = Double.parseDouble(l.get(0));
+        BigDecimal ans = new BigDecimal(l.get(0));
         String currentSign = "!+";
         for(int x = 0; x<l.size(); x++) {
             answer[0] += l.get(x);
@@ -763,13 +758,13 @@ public class ASelf {
                 currentSign = l.get(x);
                 //ans = ans + Integer.parseInt(aSelf.arr.get(x+1));
             } else {
-                double anso = 0;
-                if(x>1)anso = Double.parseDouble(l.get(x));
+                BigDecimal anso = new BigDecimal(0);
+                if(x>1)anso = new BigDecimal(l.get(x));
                 ans = ASelf.calculate(currentSign, ans, anso);
             }
         }
         answer[1] = String.valueOf(ans);
-        answer[1] = answer[1].endsWith(".0")?String.valueOf(Math.round(ans)):answer[1];
+        answer[1] = answer[1].endsWith(".0")?String.valueOf(ans.round(MathContext.DECIMAL64)):answer[1];
 
         return answer;
     }

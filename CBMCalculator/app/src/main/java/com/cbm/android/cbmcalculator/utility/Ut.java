@@ -2,6 +2,7 @@ package com.cbm.android.cbmcalculator.utility;
 
 import com.cbm.android.cbmcalculator.ASelf;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONObject;
@@ -73,7 +74,7 @@ public class Ut {
             if(!lst.contains(s)){continue;}
             while(true) {
                 if (lst.get(x).equals(s)) {
-                    double ans = ASelf.calculate(s, Double.parseDouble(lst.get(x-1)), Double.parseDouble(lst.get(x+1)));
+                    BigDecimal ans = ASelf.calculate(s, new BigDecimal(lst.get(x-1)), new BigDecimal(lst.get(x+1)));
                     String fa = String.valueOf(String.valueOf(ans).endsWith(".0")?String.valueOf(ans).replace(".0",""):ans);
                     lst.set(x-1, fa);
                     lst.remove(x+1);lst.remove(x);
