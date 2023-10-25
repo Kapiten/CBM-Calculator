@@ -2,11 +2,9 @@ package com.cbm.android.cbmcalculator.extended;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -15,9 +13,12 @@ import android.widget.Toast;
 
 import com.cbm.android.cbmcalculator.ASelf;
 import com.cbm.android.cbmcalculator.MainActivity;
+import com.cbm.android.cbmcalculator.R;
+import com.cbm.android.cbmcalculator.databinding.DialogGeneralMessageBinding;
 import com.cbm.android.cbmcalculator.utility.Ut;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.json.JSONObject;
 
@@ -27,22 +28,55 @@ public class CBMOptions {
                     final ASelf aSelf = ASelf.get(c);
                     if(ASelf.getCalcHistory(c).getAll().size()>0) {
                         aSelf.setHCB(true);
-                        if(aSelf.isStandBy()) {
-                            if(((Activity)c).equals((MainActivity)c))((MainActivity)c).clearC();
-                            aSelf.onSaved(c, -1, (View)os[0], (View)os[1]);
-                        }else {
-                            aSelf.onSave(c, ASelf.getCalcHistory(c).getAll().size()/*getHC()*/);
-                            //Toast.makeText(c, "There sHe is", Toast.LENGTH_SHORT).show();
-                        }
-                    }else {
-                        Toast.makeText(c, "No History", Toast.LENGTH_SHORT).show();
-                    }
 
+                        if(!aSelf.standBy) {
+                            DialogGeneralMessageBinding dBinding = DialogGeneralMessageBinding.inflate(((Activity)c).getLayoutInflater());
+
+                            AtomicBoolean clearCurrExp = new AtomicBoolean(false);
+                        AlertDialog ad = new AlertDialog.Builder(c, R.style.NoBGDialog)
+                            .setView(dBinding.getRoot())
+                            .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialogInterface) {
+                                    if (clearCurrExp.get()) {
+                                        ArrayList l = new ArrayList();//aSelf.arr;
+                                        for (String s : aSelf.arr) {
+                                            l.add(s);
+                                        }
+                                        if (!aSelf.standBy) {
+                                            if (((Activity) c).equals((MainActivity) c)) {
+                                                ((MainActivity) c).clearCalculation();
+                                            }
+                                            aSelf.arr = l;
+                                            aSelf.arrAct(c);
+                                        }
+                                    }
+                                }
+                            })
+                            .create();
+                        ad.show();
+                        dBinding.tvDGMTitle.setText("Information");
+                        dBinding.tvDGMMessage.setText("Clear current expression?");
+                        dBinding.btnDGMNega.setVisibility(View.VISIBLE);dBinding.btnDGMNega.setText("No");dBinding.btnDGMNega.setOnClickListener(v->{
+                                clearCurrExp.set(false);ad.dismiss();});
+                        dBinding.btnDGMPosi.setText(R.string.clear);dBinding.btnDGMPosi.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if(((Activity)c).equals((MainActivity)c)){((MainActivity)c).clearC();}
+                                aSelf.onSaved(c, -1, (View)os[0], (View)os[1]);
+                                ad.dismiss();
+                            }
+                        });
+                        if(aSelf.standBy){if(((Activity)c).equals((MainActivity)c)){((MainActivity)c).clearC();}}
+                        aSelf.onSaved(c, -1, (View)os[0], (View)os[1]);} else {
+                            if(((Activity)c).equals((MainActivity)c)){((MainActivity)c).clearC();}
+                            aSelf.onSaved(c, -1, (View)os[0], (View)os[1]);
+                        }
+                    } else {Toast.makeText(c, "No History", Toast.LENGTH_SHORT).show();}
                 } catch(Exception ex) {
                     Toast.makeText(c, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    ex.printStackTrace();
                 }
-
-
     }
     
     public static void funMADS(final Context c, final Object[] os) {

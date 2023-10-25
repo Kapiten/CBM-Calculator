@@ -40,7 +40,7 @@ public class Setter extends RelativeLayout {
     private int indx = 0;
     private Object o;
     
-	  public Setter(Context c, AttributeSet a, int b) {
+    public Setter(Context c, AttributeSet a, int b) {
         super(c,a,b);
     }
     
@@ -60,9 +60,9 @@ public class Setter extends RelativeLayout {
     
     public void initialisation(int z) {
         try {
-									LayoutInflater.from(getContext()).inflate(
-									(SettingsActivity.getSetType(ASelf.settings[z]).contains("Text")?R.layout.layout_framed_items_b:R.layout.layout_framed_items_a),
-									this, true); 
+            LayoutInflater.from(getContext()).inflate(
+            (SettingsActivity.getSetType(ASelf.settings[z]).contains("Text")?R.layout.layout_framed_items_b:R.layout.layout_framed_items_a),
+            this, true);
         indx = z;
         tvTitle = findViewById(R.id.tvSetTitle);
         //vSet = findViewById(R.id.vSet);
