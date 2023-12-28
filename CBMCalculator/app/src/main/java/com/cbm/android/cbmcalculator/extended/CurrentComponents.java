@@ -35,9 +35,9 @@ public class CurrentComponents {
         final TextView tv = new TextView(c);
         try{
         ASelf.get(c).isDotd=false;
-        
+        tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
         final LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        tv.setPadding(10,10,10,10);
+//        tv.setPadding(10,10,10,10);
         tv.setLayoutParams(lp);
         
         Drawable d = c.getResources().getDrawable(R.drawable.bg_blk_green_sr, null);
@@ -71,15 +71,15 @@ public class CurrentComponents {
             if(val==1) {
                 d=c.getResources().getDrawable(R.drawable.bg_accent_c, null);
             } else if(val==2) {
-                d=c.getResources().getDrawable(R.drawable.bg_blk_green_c, null);
+                d=c.getResources().getDrawable(R.drawable.bg_blk_green_trc, null);
             }
-            tv.setTextSize(18f);
+            tv.setTextSize(24f);
             tv.setFocusable(false);
             tv.setTextIsSelectable(false);
                     
         tv.setAlpha(((MainActivity)c).placeholders?0.7f:1f);
-        tv.setBackground(d);
-        tv.setTextColor(clr);
+//        tv.setBackground(d);
+        tv.setTextColor(/*clr*/Color.WHITE);
         tv.setInputType(InputType.TYPE_CLASS_NUMBER);
         tv.setText(ASelf.get(c).editNowValue(txt, true));
         tv.setTag(indx>=0?indx+"":((MainActivity)c).llNC.getChildCount() + "");

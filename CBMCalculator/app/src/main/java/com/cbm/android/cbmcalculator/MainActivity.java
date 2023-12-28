@@ -1,9 +1,6 @@
 package com.cbm.android.cbmcalculator;
 
 import android.app.AlertDialog;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -14,6 +11,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -43,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     public Button btnSignChange, btnEquals, btnPoint, btnMASMD, btnPercentage, btnHistory, btnSettings;
     
     public ImageButton btnBackspace, btnRefresh, btnScifra;
-    public TextView tvCurrent, tvDoneCalculation, tvCTitle; 
+    public TextView tvCurrent, tvDoneCalculation, tvCTitle;
     public LinearLayout llToolbar, llEntry, llCalculation, llNC, llLM, llScifra;
     public HorizontalScrollView hsvNC, llDoneCalculation;
     public ScrollView svC, svScifra;
@@ -94,6 +92,21 @@ public class MainActivity extends AppCompatActivity {
             llScifra = (LinearLayout)this.findViewById(R.id.llScifra);
             llCalculation = (LinearLayout)this.findViewById(R.id.llCalculation);
             llNC = (LinearLayout)this.findViewById(R.id.llNC);
+            tvDoneCalculation.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+//            llNC.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                @Override
+//                public void onGlobalLayout() {
+//                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+//                        int screenH = getWindowManager().getMaximumWindowMetrics().getBounds().height();
+//                        int appWH = getWindow().getDecorView().getHeight();
+//
+//                        if(appWH<(Float.parseFloat(screenH+"")/2f)) {
+////                            llNC.
+//                            Toast.makeText(MainActivity.this, "CBMCalc Height less than half of screen", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                }
+//            });
             llScifra.setFocusable(true);
             llScifra.setClickable(true);
             aSelf.setStandBy(true);
@@ -316,12 +329,16 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if(aSelf.isStandBy()){clearC();}
                             if(aSelf.arr.size()<1||(!aSelf.arr.get(aSelf.arr.size()-1).equals("%")))
-                                {//int ci=0;try{ci=Integer.parseInt(tvCurrent.getTag().toString());}catch(Exception ex){ex.printStackTrace();}
-                                //if(!aSelf.standBy&&ASelf.isNumber(ci>=0?aSelf.arr.get(ci):"1"))aSelf.entry(MainActivity.this,"%");
-                                //if(ASelf.isNumber(aSelf.arr.get(aSelf.arr.size()-1)))
-                                aSelf.entry(MainActivity.this,"%");
-                            }
+                            {aSelf.entry(MainActivity.this,"%");}
                         }
+            });
+            btnPercentage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(aSelf.isStandBy()){clearC();}
+                    if(aSelf.arr.size()<1||(!aSelf.arr.get(aSelf.arr.size()-1).equals("%")))
+                    {aSelf.entry(MainActivity.this,"%");}
+                }
             });
                 ((Button)findViewById(R.id.btnMERt)).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -702,6 +719,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button createEntry(String title, int type) {
         Button btn = new Button(this);
+        btn.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT);
         int dim4dp = Math.round(getResources().getDimension(R.dimen.dim4dp));
         lp.setMargins(dim4dp,dim4dp,dim4dp,dim4dp);
@@ -719,6 +737,7 @@ public class MainActivity extends AppCompatActivity {
         String mads = getResources().getString(R.string.MADS);
         for(String text: mads.split(",")) {
             Button btn = createEntry(text, 1);
+            btn.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
             int dim4dp = Math.round(getResources().getDimension(R.dimen.dim4dp));
             lp.setMargins(dim4dp,dim4dp,dim4dp,dim4dp);

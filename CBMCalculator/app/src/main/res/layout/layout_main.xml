@@ -39,6 +39,7 @@
             android:text="1"
             android:textSize="40sp"
             android:textColor="#F000"
+
         />
                 </LinearLayout>
             </HorizontalScrollView>
@@ -273,23 +274,6 @@
                 android:orientation="vertical"
                 >
                 <Button
-                    android:id="@+id/btnMInverse"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_black_blue_sr"
-                    android:layout_margin="2dp"
-                    android:enabled="false"
-                    android:textSize="22sp"
-                    android:text="+|-"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:orientation="vertical"
-                >
-                <Button
                     android:id="@+id/btnMPie"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -315,6 +299,40 @@
                     android:enabled="false"
                     android:textSize="22sp"
                     android:text="%"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                >
+                <Button
+                    android:id="@+id/btnMPercentageHnrd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_black_blue_sr"
+                    android:layout_margin="2dp"
+                    android:enabled="true"
+                    android:textSize="22sp"
+                    android:text="%100"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                >
+                <Button
+                    android:id="@+id/btnMInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_black_blue_sr"
+                    android:layout_margin="2dp"
+                    android:enabled="false"
+                    android:textSize="22sp"
+                    android:text="+|-"
                     />
             </LinearLayout>
             <LinearLayout

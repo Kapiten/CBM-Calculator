@@ -532,6 +532,9 @@ public class ASelf {
                 if(arr.size()-1>=0) {
                     if (isNumber(arr.get(arr.size() - 1))) {
                         if (str.equals("%")) {
+                            arr.add("%");
+                            CurrentComponents.addCurrentTV(c, "%", 2);
+                        } else if (str.equals("%100")) {
                             if(arr.size()>1&&(arr.contains("/")||arr.contains("÷"))) {
                                 arr.add("×");
                                 arr.add("100");
