@@ -92,21 +92,20 @@ public class MainActivity extends AppCompatActivity {
             llScifra = (LinearLayout)this.findViewById(R.id.llScifra);
             llCalculation = (LinearLayout)this.findViewById(R.id.llCalculation);
             llNC = (LinearLayout)this.findViewById(R.id.llNC);
-            tvDoneCalculation.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-//            llNC.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//                @Override
-//                public void onGlobalLayout() {
-//                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-//                        int screenH = getWindowManager().getMaximumWindowMetrics().getBounds().height();
-//                        int appWH = getWindow().getDecorView().getHeight();
-//
-//                        if(appWH<(Float.parseFloat(screenH+"")/2f)) {
-////                            llNC.
-//                            Toast.makeText(MainActivity.this, "CBMCalc Height less than half of screen", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                }
-//            });
+            llNC.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                        int screenH = getWindowManager().getMaximumWindowMetrics().getBounds().height();
+                        int appWH = getWindow().getDecorView().getHeight();
+
+                        if(appWH<=(Float.parseFloat(screenH+"")/1.6f)) {
+                            tvDoneCalculation.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+                            Toast.makeText(MainActivity.this, "CBMCalc Height less than half of screen", Toast.LENGTH_SHORT).show();
+                        } else {tvDoneCalculation.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_NONE);}
+                    }
+                }
+            });
             llScifra.setFocusable(true);
             llScifra.setClickable(true);
             aSelf.setStandBy(true);

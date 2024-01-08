@@ -35,7 +35,7 @@ public class CurrentComponents {
         final TextView tv = new TextView(c);
         try{
         ASelf.get(c).isDotd=false;
-        tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+//        tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
         final LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 //        tv.setPadding(10,10,10,10);
         tv.setLayoutParams(lp);
@@ -54,6 +54,14 @@ public class CurrentComponents {
             public void onGlobalLayout() {
                 try {
                    if(val!=0) {
+                               int screenH = 0;
+                               if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                                   screenH = ((MainActivity)c).getWindowManager().getMaximumWindowMetrics().getBounds().height();
+                               }
+                               int appWH = ((MainActivity)c).getWindow().getDecorView().getHeight();
+
+                               if(appWH<=(Float.parseFloat(screenH+"")/1.6f)) {tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);}
+                               else {tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_NONE);}
                        tv.setWidth(tv.getHeight());
                        tv.setPadding(0,0,1,1);
                 
