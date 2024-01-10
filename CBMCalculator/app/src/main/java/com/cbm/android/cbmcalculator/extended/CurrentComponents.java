@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -26,6 +27,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class CurrentComponents {
+    static final String TAG = CurrentComponents.class.getSimpleName();
     
     public static TextView addCurrentTV(final Context c, String txt, int val) {
         return addCurrentTV(c, ((MainActivity)c).llNC.getChildCount(), txt, val);
@@ -57,6 +59,8 @@ public class CurrentComponents {
                                int screenH = 0;
                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
                                    screenH = ((MainActivity)c).getWindowManager().getMaximumWindowMetrics().getBounds().height();
+                                   int sw = ((MainActivity)c).getWindowManager().getMaximumWindowMetrics().getBounds().width();
+                                   Log.d(TAG, "sw="+sw+"\nsh="+screenH);
                                }
                                int appWH = ((MainActivity)c).getWindow().getDecorView().getHeight();
 
