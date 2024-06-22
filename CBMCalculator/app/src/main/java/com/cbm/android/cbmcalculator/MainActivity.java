@@ -30,6 +30,7 @@ import com.cbm.android.cbmcalculator.settings.*;
 import com.cbm.android.cbmcalculator.utility.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -520,81 +521,90 @@ public class MainActivity extends AppCompatActivity {
             }
         });
             
-            btnBackspace.setOnClickListener(new View.OnClickListener() {
+        btnBackspace.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)	 {
-                    try {
-                        if(tvCurrent==null)return;
-                        int value = Integer.parseInt(tvCurrent.getTag().toString());
-                        if(!aSelf.isStandBy()&&(ASelf.isNumber(aSelf.arr.get(value))||aSelf.arr.get(value).isEmpty())) {
-                            if(tvCurrent.getText().toString().length()>0) {
-                                String str1 = tvCurrent.getText().toString();
-                                aSelf.editNowValue("", true);
-                                str1 = aSelf.editNowValue(str1.substring(0,str1.length()-1));
-                                if(aSelf.arr.size()>value) {
-                                    aSelf.arr.set(value, str1);
-                                    tvCurrent.setText(str1);
-                                }
-                            } else {
-                                if(llNC.getChildCount()>1&&(ASelf.isNumber(aSelf.arr.get(value))||aSelf.arr.get(value).isEmpty())&&!ASelf.isNumber(aSelf.arr.get(value-1))) {
-                                    llNC.removeView((TextView)llNC.getChildAt(value));
-                                    llNC.removeView((TextView)llNC.getChildAt(value-1));
-                                    if(aSelf.arr.size()>value){
-                                        //aSelf.arr.remove(value);
-                                        aSelf.arr.remove(value);
-                                        aSelf.arr.remove(value-1);
-                                    }
-                                    tvCurrent = (TextView)llNC.getChildAt(value-2);
-                                    
-                                }
-                                for(int xx=0; xx<llNC.getChildCount(); xx++) {
-                                    llNC.getChildAt(xx).setTag(xx);
-                                }
-                                aSelf.cTxt=tvCurrent.getText().toString();
-                                //tvCurrent.callOnClick();
+            public void onClick(View v) {
+                try {
+                    if (tvCurrent == null) return;
+                    int value = Integer.parseInt(tvCurrent.getTag().toString());
+                    if (!aSelf.isStandBy() && (ASelf.isNumber(aSelf.arr.get(value)) || aSelf.arr.get(value).isEmpty())) {
+                        if (tvCurrent.getText().toString().length() > 0) {
+                            String str1 = tvCurrent.getText().toString();
+                            aSelf.editNowValue("", true);
+                            str1 = aSelf.editNowValue(str1.substring(0, str1.length() - 1));
+                            if (aSelf.arr.size() > value) {
+                                aSelf.arr.set(value, str1);
+                                tvCurrent.setText(str1);
                             }
-                            
-                            if(llNC.getChildCount()<=0){CurrentComponents.addCurrentTV(MainActivity.this, "");}
-                            if(aSelf.cTxt.contains(".")) {
-                                isDotd = true;
-                            } else {
-                                isDotd = false;
+                        } else {
+                            if (llNC.getChildCount() > 1 && (ASelf.isNumber(aSelf.arr.get(value)) || aSelf.arr.get(value).isEmpty()) && !ASelf.isNumber(aSelf.arr.get(value - 1))) {
+                                llNC.removeView((TextView) llNC.getChildAt(value));
+                                llNC.removeView((TextView) llNC.getChildAt(value - 1));
+                                if (aSelf.arr.size() > value) {
+                                    //aSelf.arr.remove(value);
+                                    aSelf.arr.remove(value);
+                                    aSelf.arr.remove(value - 1);
+                                }
+                                tvCurrent = (TextView) llNC.getChildAt(value - 2);
+
                             }
+                            for (int xx = 0; xx < llNC.getChildCount(); xx++) {
+                                llNC.getChildAt(xx).setTag(xx);
+                            }
+                            aSelf.cTxt = tvCurrent.getText().toString();
+                            //tvCurrent.callOnClick();
                         }
-                            aSelf.arrAct(MainActivity.this);
-                    if(llNC.getChildCount()==1) {
-                                    if(((TextView)llNC.getChildAt(0)).getText().toString().isEmpty()){btnRefresh.callOnClick()	;}
-                                }
-                        //Toast.makeText(getApplicationContext(), "tvCurrent="+tvCurrent.getText().toString(), Toast.LENGTH_SHORT).show();
-                    } catch(Exception ex) {
-                        ex.printStackTrace();
-                        Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-               
+
+                        if (llNC.getChildCount() <= 0) {
+                            CurrentComponents.addCurrentTV(MainActivity.this, "");
+                        }
+                        if (aSelf.cTxt.contains(".")) {
+                            isDotd = true;
+                        } else {
+                            isDotd = false;
+                        }
                     }
+                    aSelf.arrAct(MainActivity.this);
+                    if (llNC.getChildCount() == 1) {
+                        if (((TextView) llNC.getChildAt(0)).getText().toString().isEmpty()) {
+                            btnRefresh.callOnClick();
+                        }
+                    }
+                    //Toast.makeText(getApplicationContext(), "tvCurrent="+tvCurrent.getText().toString(), Toast.LENGTH_SHORT).show();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+
                 }
-            });
-           
+            }
+        });
+
             btnBackspace.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v)	 {
-                    try {                        
-                        if(tvCurrent==null)return false;
+                @Override
+                public boolean onLongClick(View v) {
+                    try {
+                        if (tvCurrent == null) return false;
                         int value = Integer.parseInt(tvCurrent.getTag().toString());
-                                if(tvCurrent.getText().toString().length()>0) {
-                                aSelf.editNowValue("", true);
-                                if(aSelf.arr.size()>value) {
-                                    aSelf.arr.set(value, "");
-                            tvCurrent.setText("");
+                        if (tvCurrent.getText().toString().length() > 0) {
+                            aSelf.editNowValue("", true);
+                            if (aSelf.arr.size() > value) {
+                                aSelf.arr.set(value, "");
+                                tvCurrent.setText("");
                             }
                         }
                         aSelf.arrAct(MainActivity.this);
-                        if(llNC.getChildCount()==1) {
-                                    if(((TextView)llNC.getChildAt(0)).getText().toString().isEmpty()){btnRefresh.callOnClick();}
-                                }
+                        if (llNC.getChildCount() == 1) {
+                            if (((TextView) llNC.getChildAt(0)).getText().toString().isEmpty()) {
+                                btnRefresh.callOnClick();
+                            }
+                        }
                         //Toast.makeText(getApplicationContext(), "Backspace Option", Toast.LENGTH_SHORT).show();
-                   } catch(Exception ex){ex.printStackTrace();}
-                return true;
-            }});
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    return true;
+                }
+            });
         btnEquals.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -610,18 +620,23 @@ public class MainActivity extends AppCompatActivity {
                     aSelf.setHCB(false);
                     BigDecimal ans = new BigDecimal(aSelf.arr.get(0));
                     BigDecimal ans2 = new BigDecimal(0);
+                    BigDecimal anso = new BigDecimal(0);
+                    boolean openBracket = false;
+                    ArrayList<String> arrBra = new ArrayList<>();
                     int cAns = 1, calcN=1;
-                    String answ="", answ2="", answ3="";    
+                    String answ="", answ2="", answ3="";
                     String currentSign = "!+";
+                    String braSign = "";
                     String conjSign = "";
                     //Toast.makeText(getApplicationContext(), "= Calculate", Toast.LENGTH_LONG).show();
                     String standByPH = "Empty";
-                            boolean expCont=false;
+                    boolean expCont=false;
                             
-                        if(aSelf.arrS.size()==0){expCont=true;
-                                aSelf.addListItem(aSelf.arrS, new JSONObject().put("CalculationName","#"+calcN+" Calculation").put("Calculation",aSelf.arr));
-                            aSelf.allTypeCalculations();//aSelf.addListItem(aSelf.arrS, new JSONObject().put("CalculationName",aSelf.getCurrentCalculationType().getString("name")+" Calculation").put("Calculation",Ut.toBodmas(aSelf.arr)));
-                        }
+                    if(aSelf.arrS.size()==0){
+                        expCont=true;
+                        aSelf.addListItem(aSelf.arrS, new JSONObject().put("CalculationName","#"+calcN+" Calculation").put("Calculation",aSelf.arr));
+                        aSelf.allTypeCalculations();//aSelf.addListItem(aSelf.arrS, new JSONObject().put("CalculationName",aSelf.getCurrentCalculationType().getString("name")+" Calculation").put("Calculation",Ut.toBodmas(aSelf.arr)));
+                    }
                     CurrentComponents.tvCalcTitle(MainActivity.this, placeholders?standByPH:aSelf.calcNm);
                     for(int x = 0; x < aSelf.arr.size(); x++) {
                         ans2 = ans;
@@ -629,8 +644,8 @@ public class MainActivity extends AppCompatActivity {
                             currentSign = aSelf.arr.get(x);
                             //ans = ans + Integer.parseInt(aSelf.arr.get(x+1));
                         } else {
-                            BigDecimal anso = new BigDecimal(0);
-                            if(x>1)anso = new BigDecimal(aSelf.arr.get(x));
+                            if(x>1){anso = new BigDecimal(aSelf.arr.get(x));}
+                            else {return;}
                             ans = ASelf.calculate(currentSign, ans, anso);
                             
                             String c = "";

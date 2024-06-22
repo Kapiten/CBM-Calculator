@@ -299,6 +299,7 @@
                                 android:enabled="false"
                                 android:textSize="22sp"
                                 android:text="%"
+                                android:visibility="gone"
                                 />
                         </LinearLayout>
                         <LinearLayout
@@ -316,6 +317,7 @@
                                 android:enabled="true"
                                 android:textSize="22sp"
                                 android:text="%100"
+                                android:visibility="gone"
                                 />
                         </LinearLayout>
                         <LinearLayout
@@ -350,6 +352,7 @@
                                 android:textColor="#FFFF"
                                 android:textSize="22sp"
                                 android:text="√"
+                                android:visibility="gone"
                                 />
                         </LinearLayout>
                         <LinearLayout
@@ -367,6 +370,7 @@
                                 android:textColor="#FFFF"
                                 android:textSize="22sp"
                                 android:text="e(2²)"
+                                android:visibility="gone"
                                 />
                         </LinearLayout>
                         <!--Button
