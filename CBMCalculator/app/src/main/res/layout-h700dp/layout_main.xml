@@ -206,6 +206,7 @@
                         android:textColor="#FFFF"
                         android:textSize="22sp"
                         android:text="BODMAS"
+                        android:visibility="gone"
                         />
                     <!--RelativeLayout
                         android:id="@+id/rlMFormula"
