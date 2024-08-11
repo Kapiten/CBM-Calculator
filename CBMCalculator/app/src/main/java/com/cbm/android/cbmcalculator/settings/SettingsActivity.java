@@ -122,6 +122,7 @@ public class SettingsActivity extends Activity {
         tv.setLayoutParams(lptv);
         tv.setBackground(getResources().getDrawable(R.drawable.bg_grey_r, null));
         tv.setPadding(5,5,5,5);
+        lptv.setMargins(5,5,5,5);
         tv.setGravity(Gravity.CENTER);
         tv.setText(title);
         tv.setTextColor(Color.WHITE);
