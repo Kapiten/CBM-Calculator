@@ -20,8 +20,6 @@ import com.cbm.android.cbmcalculator.ASelf;
 import com.cbm.android.cbmcalculator.R;
 import com.cbm.android.cbmcalculator.custom.Setter;
 
-import java.util.Arrays;
-
 public class SettingsActivity extends Activity {
     private Button btnSetEg, btnReset;
     private ListView lvSetColor;
@@ -71,7 +69,7 @@ public class SettingsActivity extends Activity {
             int x = 0;
              for(String s: ASelf.settings) {
              if(!getSetType(s).equals("Text")&&!getSetType(s).equals("Textc")&&!getSetType(s).equals("Color")) {
-                 if(isCartegory(getSetCartegory(s))==false)createCartegory(getSetCartegory(s));
+                 if(isCartegory(getSetCartegory(s))==false) createCategory(getSetCartegory(s));
                  addCartegoryItem(getSetCartegory(s),getSetName(s),x);
              }
                 /*if(isCartegory(getSetType(s))==false){createCartegory(getSetType(s));}/*llSetColor.addView(sclr);*
@@ -107,7 +105,7 @@ public class SettingsActivity extends Activity {
         return n.contains("+")?n.substring(n.indexOf("+")+1).replace("_", " "):n.substring(n.indexOf("_")+1).replace("_", " ");
     }
     
-    private void createCartegory(String title) {
+    private void createCategory(String title) {
         LinearLayout ll = new LinearLayout(this);
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         lp.setMargins(5,5,5,5);
