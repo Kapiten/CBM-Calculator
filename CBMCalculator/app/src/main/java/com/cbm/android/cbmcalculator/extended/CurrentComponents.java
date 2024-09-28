@@ -39,7 +39,7 @@ public class CurrentComponents {
         ASelf.get(c).isDotd=false;
 //        tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
         final LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-//        tv.setPadding(10,10,10,10);
+        tv.setPadding(10,10,10,10);
         tv.setLayoutParams(lp);
         
         Drawable d = c.getResources().getDrawable(R.drawable.bg_blk_green_sr, null);
@@ -60,15 +60,15 @@ public class CurrentComponents {
                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
                                    screenH = ((MainActivity)c).getWindowManager().getMaximumWindowMetrics().getBounds().height();
                                    int sw = ((MainActivity)c).getWindowManager().getMaximumWindowMetrics().getBounds().width();
-                                   Log.d(TAG, "sw="+sw+"\nsh="+screenH);
+//                                   Log.d(TAG, "sw="+sw+"\nsh="+screenH);
                                }
                                int appWH = ((MainActivity)c).getWindow().getDecorView().getHeight();
 
                                if(appWH<=(Float.parseFloat(screenH+"")/1.6f)) {tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);}
                                else {tv.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_NONE);}
                        tv.setWidth(tv.getHeight());
-                       tv.setPadding(0,0,1,1);
-                
+//                       tv.setPadding(0,0,c.getResources().getDimensionPixelSize(R.dimen.dim8dp),c.getResources().getDimensionPixelSize(R.dimen.dim8dp));
+
                                 }} catch(Exception ex) {
                                 ex.printStackTrace();
                                 Toast.makeText(c, ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -80,17 +80,18 @@ public class CurrentComponents {
                                 Toast.makeText(c, ex.getMessage(), Toast.LENGTH_SHORT).show();
                             }
             
-            if(val==1) {
-                d=c.getResources().getDrawable(R.drawable.bg_accent_c, null);
-            } else if(val==2) {
-                d=c.getResources().getDrawable(R.drawable.bg_blk_green_trc, null);
-            }
+//            if(val==1) {
+//                d=c.getResources().getDrawable(R.drawable.bg_accent_c, null);
+//            } else if(val==2) {
+//                d=c.getResources().getDrawable(R.drawable.bg_blk_green_trc, null);
+//            }
             tv.setTextSize(24f);
             tv.setFocusable(false);
             tv.setTextIsSelectable(false);
                     
         tv.setAlpha(((MainActivity)c).placeholders?0.7f:1f);
-//        tv.setBackground(d);
+
+        tv.setBackground(d);
         tv.setTextColor(/*clr*/Color.WHITE);
         tv.setInputType(InputType.TYPE_CLASS_NUMBER);
         tv.setText(ASelf.get(c).editNowValue(txt, true));
@@ -104,12 +105,16 @@ public class CurrentComponents {
                 ASelf.get(c).tvCInd=Integer.parseInt(((MainActivity)c).tvCurrent.getTag().toString());
                 ((MainActivity)c).clearCTVS();
                     
-                //Drawable d = getResources().getDrawable(R.drawable.bg_blk_green_sr, null);
+//                Drawable d = c.getResources().getDrawable(R.drawable.bg_blk_green_sr, null);
+//
+//                for(int a=1; a<((MainActivity)c).llCalculation.getChildCount(); a++) {
+//                    ((MainActivity)c).llCalculation.setBackground(d);
+//                }
                 //int clr = Color.WHITE;
                 int calcCount = ((MainActivity)c).llNC.getChildCount()==0?0:((MainActivity)c).llNC.getChildCount()-1;
                 
                 ((MainActivity)c).tvCurrent.setSelected(true);
-                if(((TextView)((MainActivity)c).llNC.getChildAt(calcCount)).getText().toString().equals("=")) {
+                if(((TextView)((MainActivity)c).llNC.getChildAt(calcCount)).getText().toString().equals(""/*=*/)) {
                     for(int a=1; a<((MainActivity)c).llCalculation.getChildCount(); a++) {
                         AnswerListItem ansV = (AnswerListItem)((MainActivity)c).llCalculation.getChildAt(a);
                         JSONArray ja = new JSONArray(ansV.getOtherInfo());

@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         
             init();
         } catch(Exception ex) {
-            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }
     }
@@ -131,11 +133,30 @@ public class MainActivity extends AppCompatActivity {
             btnSettings.setCompoundDrawables(dSettings,null,null,null);
             //btnScifra.setCompoundDrawables(dOptions,null,null,null);
             btnHistory.setCompoundDrawables(dHistory,null,null,null);
-            
+
         } catch(Exception ex) {
-            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }
+
+        tvCurrent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence t, int a, int b, int cc) {}
+
+            @Override
+            public void onTextChanged(CharSequence t, int a, int b, int cc) {
+//                try {
+//                    if(t.toString().isEmpty()){t.toString().replace(0, t.toString().length(), "_");}
+//                    else if(t.toString().equals("_")){t.toString().replace(0, t.toString().length(), "");}
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable e) {
+            }
+        });
     }
 
     @Override
@@ -154,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
             
             clearC();
         } catch(Exception ex) {
-            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+//            +(), Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }
     }
@@ -186,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
             }
             
         } catch(Exception ex) {
-            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }
     }
@@ -264,6 +285,7 @@ public class MainActivity extends AppCompatActivity {
             
         placeholders = false;
         aSelf.phOn=true;
+        aSelf.setStandBy(true);
     }
     
     private void applySettings() {
@@ -272,8 +294,10 @@ public class MainActivity extends AppCompatActivity {
                 SettingsActivity.resetSettings(this);
             }
             int dl = Integer.parseInt(ASelf.getCalcSet(this).getString(getResources().getString(R.string.decimal_count_textn), "1"));
-            ASelf.mDF.setMaximumFractionDigits(dl);
-            ASelf.mDF.setMinimumFractionDigits(dl);
+            try {
+                ASelf.mDF.setMaximumFractionDigits(dl);
+                ASelf.mDF.setMinimumFractionDigits(dl);
+            } catch(Exception ex){ex.printStackTrace();}
             ASelf.carryAnswer = ASelf.getCalcSet(this).getString(getResources().getString(R.string.history_carry_answer_switch), "Off").equals("On");
             /*llDoneCalculation.setBackground(DefaultThemeSet.mkShape(new JSONObject(ASelf.getCalcSet(this).getString(getResources().getString(R.string.answer_color),""))));
             tvDoneCalculation.setTextColor(ASelf.getCalcSet(this).getInt(getResources().getString(R.string.answer_textc),Color.BLACK));
@@ -431,11 +455,11 @@ public class MainActivity extends AppCompatActivity {
                      }
                 });
             }
-               
+
                 tvCurrent.addTextChangedListener(new TextWatcher() {
 									@Override
 										   public void beforeTextChanged(CharSequence t, int a, int b, int cc) {}
-															
+
 										   @Override
 									     public void onTextChanged(CharSequence t, int a, int b, int cc) {
 										       try {
@@ -447,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
-                    			
+
 										   @Override
 									     public void afterTextChanged(Editable e) {}
             });
@@ -483,7 +507,7 @@ public class MainActivity extends AppCompatActivity {
         btnPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    if(tvCurrent==null) return;
+//                    if(tvCurrent==null) {aSelf.entry(v.getContext(), "0.");}
                     if(!aSelf.isStandBy()) {
                         String s = ((Button)v).getText().toString();
                     String tvc = tvCurrent.getText().toString();
@@ -491,14 +515,15 @@ public class MainActivity extends AppCompatActivity {
                     if(!isDotd) {
                        //tvCurrent.setText(aSelf.editNowValue(((Button)v).getText().toString()));
                         isDotd=true;
+                        if(tvCurrent.getText().toString().isEmpty() || aSelf.cTxt.isEmpty()) {
+                            //tvCurrent.setText(tvCurrent.getText() + "0.");
+                            tvc="0";
+                            tvCurrent.setText(tvc);
+                            aSelf.editNowValue("0");
+                        }
                         tvCurrent.setText(tvc+s);
                         aSelf.editNowValue(((Button)v).getText().toString());
-                    } else if(tvCurrent.getText().toString().isEmpty() || aSelf.cTxt.isEmpty()) {
-                        //tvCurrent.setText(tvCurrent.getText() + "0.");
-                        tvCurrent.setText(tvc.isEmpty()?"0":tvc+s);
-                        isDotd = true;
-                        aSelf.editNowValue(((Button)v).getText().toString());
-                    } else {
+                    }  else {
                             int i = Integer.parseInt(tvc.replace(".",""));
                         tvCurrent.setText(i+"");
                         isDotd = false;
@@ -507,7 +532,12 @@ public class MainActivity extends AppCompatActivity {
                     
                     }
                 }
-            }aSelf.arrAct(MainActivity.this);
+            } else {
+                        clearC();
+                        aSelf.setStandBy(false);
+                        aSelf.entry(v.getContext(), "0.");}
+                    aSelf.arrAct(MainActivity.this);
+                    if(aSelf.cTxt.contains(".")){isDotd = true;}
                         }    
         });
                 
@@ -573,7 +603,7 @@ public class MainActivity extends AppCompatActivity {
                     //Toast.makeText(getApplicationContext(), "tvCurrent="+tvCurrent.getText().toString(), Toast.LENGTH_SHORT).show();
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -632,7 +662,7 @@ public class MainActivity extends AppCompatActivity {
                     String standByPH = "Empty";
                     boolean expCont=false;
                             
-                    if(aSelf.arrS.size()==0){
+                    if(aSelf.arrS.isEmpty()){
                         expCont=true;
                         aSelf.addListItem(aSelf.arrS, new JSONObject().put("CalculationName","#"+calcN+" Calculation").put("Calculation",aSelf.arr));
                         aSelf.allTypeCalculations();//aSelf.addListItem(aSelf.arrS, new JSONObject().put("CalculationName",aSelf.getCurrentCalculationType().getString("name")+" Calculation").put("Calculation",Ut.toBodmas(aSelf.arr)));
@@ -645,7 +675,7 @@ public class MainActivity extends AppCompatActivity {
                             //ans = ans + Integer.parseInt(aSelf.arr.get(x+1));
                         } else {
                             if(x>1){anso = new BigDecimal(aSelf.arr.get(x));}
-                            else {return;}
+                            else {continue;}
                             ans = ASelf.calculate(currentSign, ans, anso);
                             
                             String c = "";
@@ -656,9 +686,11 @@ public class MainActivity extends AppCompatActivity {
                                 answ2 = (ans+"").contains(".")?((ans+"").endsWith(".0")?Integer.parseInt((ans+"").replace(".0",""))+"":(ans+"")):(ans+"");
                                 answ3 = aSelf.arr.get(x);
                                 if(ASelf.getCalcSet(getApplicationContext()).getString(getResources().getString(R.string.decimal_always_switch), "Switch_Numbers_+Decimal_Always").equals("On")) {
-                                    answ = ASelf.mDF.format(new BigDecimal(ans2+""));
-                                    answ2 = ASelf.mDF.format(new BigDecimal(ans+""));
-                                    answ3 = ASelf.mDF.format(new BigDecimal(aSelf.arr.get(x)));
+                                    try {
+                                        answ = ASelf.mDF.format(new BigDecimal(ans2 + ""));
+                                        answ2 = ASelf.mDF.format(new BigDecimal(ans + ""));
+                                        answ3 = ASelf.mDF.format(new BigDecimal(aSelf.arr.get(x)));
+                                    } catch(Exception ex){ex.printStackTrace();}
                                 }
                                 if(x>0) {
                                     CurrentComponents.addCalculatedTV(MainActivity.this, new JSONObject()
@@ -676,8 +708,9 @@ public class MainActivity extends AppCompatActivity {
                        //String answ = String.valueOf(ans).endsWith(".0")?String.valueOf(Integer.parseInt(ans+"")+""):String.valueOf(ans);
                         if(ASelf.getCalcSet(getApplicationContext()).getString(getResources().getString(R.string.decimal_always_switch),"").equals("On")) {
                                     //answ2 = ans+"";
-                        answ2 = ASelf.mDF.format(ans);
-                                    }
+                            try{answ2 = ASelf.mDF.format(ans);}
+                            catch(Exception ex){ex.printStackTrace();}
+                        }
                         if(currentSign.equals("%"))answ=new BigDecimal((ans)+"")+"("+(ans.multiply(new BigDecimal(100)))+"%)";
                         tvDoneCalculation.setAlpha(placeholders?0.5f:1f);
                         tvDoneCalculation.setText(answ2);
@@ -719,13 +752,13 @@ public class MainActivity extends AppCompatActivity {
                         //}
                     }
                 } catch(Exception ex) {
-                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
                     ex.printStackTrace();
                 }
             }
             });
         } catch(Exception ex) {
-            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
             ex.printStackTrace();
                 
         }
@@ -806,10 +839,16 @@ public class MainActivity extends AppCompatActivity {
                     }
                     hc=1;
                     hca=true;
+                    if(!ASelf.isNumber(str)&&aSelf.arr!=null&& !aSelf.arr.isEmpty() &&ASelf.isNumber(aSelf.arr.get(aSelf.arr.size() - 1))&&tvCurrent.getText().toString().endsWith(".")) {
+                        aSelf.arr.set(aSelf.arr.size() - 1, aSelf.editNowValue("0"));
+                        tvCurrent.setText(aSelf.arr.get(aSelf.arr.size() - 1));
+                    }
                     aSelf.entry(MainActivity.this,str);
                     aSelf.arrAct(MainActivity.this);
+                    if(!ASelf.isNumber(str)){isDotd=false;}
                 } catch(Exception ex) {
-                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    ex.printStackTrace();
                 }
             }
         };
@@ -836,6 +875,7 @@ public class MainActivity extends AppCompatActivity {
         tvDoneCalculation.setText(aSelf.isStandBy()?"Write an expression":"");
         btnPercentage.setEnabled(false);
         btnMASMD.setSelected(false);
+        isDotd=false;
     }
     
     public void clearCTVS() {

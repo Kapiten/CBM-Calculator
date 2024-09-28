@@ -21,6 +21,7 @@ import com.cbm.android.cbmcalculator.utility.*;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -489,6 +490,9 @@ public class ASelf {
             if(cTxt.equals("0")) {
                 cTxt = value.equals(".")?cTxt+value:value;
             } else {
+                if(cTxt.endsWith(".0")&&ASelf.isNumber(value)&&new BigDecimal(value).doubleValue()>0){
+                    cTxt = cTxt.substring(0, cTxt.length()-1);
+                }
                 cTxt += value;
             }
         }
@@ -500,7 +504,7 @@ public class ASelf {
             //ASelf.get().cTxt = cTxt;
             isDotd = false;
         }
-        
+
         return cTxt;
     }
     
@@ -530,7 +534,7 @@ public class ASelf {
                 ((Button)os[2]).setEnabled(true);
             } else {
                 if(arr.size()-1>=0) {
-                    if (isNumber(arr.get(arr.size() - 1))) {
+                    if (isNumber(arr.get(arr.size() - 1))||str.equalsIgnoreCase(".")) {
                         if (str.equals("%")) {
                             arr.add("%");
                             CurrentComponents.addCurrentTV(c, "%", 2);
@@ -574,7 +578,9 @@ public class ASelf {
             }
         }
         try{
-                if(!isNumber(str)){((HorizontalScrollView)os[4]).smoothScrollTo(((HorizontalScrollView)os[4]).getMaxScrollAmount(), 0);}else {((HorizontalScrollView)os[4]).smoothScrollTo(Math.round(((TextView)os[0]).getX()), 0);}} catch(Exception ex) {ex.printStackTrace();
+            if(!isNumber(str)){((HorizontalScrollView)os[4]).smoothScrollTo(((HorizontalScrollView)os[4]).getMaxScrollAmount(), 0);}
+            else {((HorizontalScrollView)os[4]).smoothScrollTo(Math.round(((TextView)os[0]).getX()), 0);}}
+        catch(Exception ex) {ex.printStackTrace();
                 Toast.makeText(c, ex.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
@@ -637,7 +643,7 @@ public class ASelf {
                 ans = ans.multiply(ans2);
                 break;
             case "÷":
-                ans = ans.divide(ans2);
+                ans = ans.divide(ans2, 100, RoundingMode.CEILING);
                 break;
             case "%":
                 ans = ans.multiply(new BigDecimal(0.01));
