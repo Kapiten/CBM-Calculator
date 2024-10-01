@@ -624,7 +624,7 @@ public class ASelf {
                                     answ2 = mDF.format(Double.parseDouble(ans+""));
                                 }
                             //}
-            ((MainActivity)c).tvDoneCalculation.setText(answ2 + " | Write an expression");
+//            ((MainActivity)c).tvDoneCalculation.setText(answ2 + " | Write an expression");
         }} catch (Exception ex) {ex.printStackTrace();}
     }
 
@@ -643,7 +643,7 @@ public class ASelf {
                 ans = ans.multiply(ans2);
                 break;
             case "÷":
-                ans = ans.divide(ans2, 100, RoundingMode.CEILING);
+                ans = ans.divide(ans2);
                 break;
             case "%":
                 ans = ans.multiply(new BigDecimal(0.01));

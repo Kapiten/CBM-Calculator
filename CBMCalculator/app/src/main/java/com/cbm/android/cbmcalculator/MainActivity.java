@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -39,39 +40,45 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
+//    private LayoutMainBinding binding;
     private ASelf aSelf;
     private AlertDialog ad;
     public Button btnSignChange, btnEquals, btnPoint, btnMASMD, btnPercentage, btnHistory, btnSettings;
     
     public ImageButton btnBackspace, btnRefresh, btnScifra;
     public TextView tvCurrent, tvDoneCalculation, tvCTitle;
-    public LinearLayout llToolbar, llEntry, llCalculation, llNC, llLM, llScifra;
+    public LinearLayout llToolbar, llEntry, llCalculation, llNC, llLM, llScifra, etLayout;
+    public EditText mEt;
     public HorizontalScrollView hsvNC, llDoneCalculation;
     public ScrollView svC, svScifra;
-    
+
     private int currIndex = 0, cSI = 0, hc=0, bracketOpen=0, bracketIndex=0; //current Selected Index
     private BigDecimal bracketAnsw = new BigDecimal(0);
     private String nowValue = "";
-    public boolean isSFMShowing = false, 
+    public boolean isSFMShowing = false,
     isDotd = false, hca=false, placeholders=false;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+//            binding = LayoutMainBinding.inflate(getLayoutInflater());
+//            setContentView(binding.getRoot());
             setContentView(R.layout.layout_main);
-        
+
             init();
         } catch(Exception ex) {
 //            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }
     }
-    
+
     private void init() {
         try {
             aSelf = ASelf.get(this);
             ad = new AlertDialog.Builder(this).create();
+            etLayout = (LinearLayout)this.findViewById(R.id.etLayout);
+            mEt = (EditText)this.findViewById(R.id.etExpression);
             llDoneCalculation = (HorizontalScrollView) this.findViewById(R.id.llDoneCalculation);
             tvDoneCalculation = (TextView)this.findViewById(R.id.tvDoneCalculation);
             //tvNow = this.findViewById(R.id.etNow);
@@ -121,15 +128,15 @@ public class MainActivity extends AppCompatActivity {
             clearC();
             registerForContextMenu(btnSignChange);
             applySettings();
-            
+
             Drawable dHistory = getResources().getDrawable(R.drawable.svg_history);
             //Drawable dOptions = getResources().getDrawable(R.drawable.svg_options);
             Drawable dSettings = getResources().getDrawable(R.drawable.svg_settings);
-            
+
             dHistory.setBounds(0,0,100,100);
             //dOptions.setBounds(0,0,100,100);
             dSettings.setBounds(0,0,100,100);
-            
+
             btnSettings.setCompoundDrawables(dSettings,null,null,null);
             //btnScifra.setCompoundDrawables(dOptions,null,null,null);
             btnHistory.setCompoundDrawables(dHistory,null,null,null);
@@ -139,24 +146,24 @@ public class MainActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
 
-        tvCurrent.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence t, int a, int b, int cc) {}
-
-            @Override
-            public void onTextChanged(CharSequence t, int a, int b, int cc) {
-//                try {
-//                    if(t.toString().isEmpty()){t.toString().replace(0, t.toString().length(), "_");}
-//                    else if(t.toString().equals("_")){t.toString().replace(0, t.toString().length(), "");}
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable e) {
-            }
-        });
+//        tvCurrent.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence t, int a, int b, int cc) {}
+//
+//            @Override
+//            public void onTextChanged(CharSequence t, int a, int b, int cc) {
+////                try {
+////                    if(t.toString().isEmpty()){t.toString().replace(0, t.toString().length(), "_");}
+////                    else if(t.toString().equals("_")){t.toString().replace(0, t.toString().length(), "");}
+////                } catch (Exception ex) {
+////                    ex.printStackTrace();
+////                }
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable e) {
+//            }
+//        });
     }
 
     @Override
@@ -170,16 +177,16 @@ public class MainActivity extends AppCompatActivity {
                 sped.putString("RecentExp", "");
             }
             sped.apply();
-            
+
             //aSelf.onSave(MainActivity.this, -1);
-            
+
             clearC();
         } catch(Exception ex) {
 //            +(), Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
@@ -203,34 +210,34 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 clearC();
                 //aSelf.onSaved(MainActivity.this, 1, llCalculation, tvDoneCalculation);
-                
+
             }
-            
+
         } catch(Exception ex) {
 //            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }
     }
-    
+
     @Override
     public void onBackPressed() {
         if(svScifra.getVisibility()==View.VISIBLE) {
             MediumAnims.scifraMenu(svScifra, false);
             return;
         }
-        
+
         super.onBackPressed();
     }
-    
+
     @Override
     public void onCreateContextMenu(ContextMenu cm, View v, ContextMenuInfo mi) {
         //((Menu)cm).add(21, 1, Menu.NONE, "Make StandBy Expression");
         for(int x=0; x<ASelf.strSigns().size();x++) {
             ((Menu)cm).add(41+x, 0+x, Menu.NONE, ASelf.strSigns().get(x));
         }
-        
+
     }
-    
+
     @Override
     public boolean onContextItemSelected(MenuItem mi) {
         switch(mi.getGroupId()) {
@@ -242,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                 aSelf.arrAct(MainActivity.this);
                 return true;
         }
-        
+
         return false;
     }
 /*
@@ -280,14 +287,14 @@ public class MainActivity extends AppCompatActivity {
         for(int s=0; s<exp.length(); s++) {
             aSelf.entry(MainActivity.this,exp.charAt(s)+"");
         }
-        
+
         btnEquals.callOnClick();
-            
+
         placeholders = false;
         aSelf.phOn=true;
         aSelf.setStandBy(true);
     }
-    
+
     private void applySettings() {
         try {
             if(!ASelf.getCalcSet(this).contains(getResources().getString(R.string.stand_by_example_default_expression_texttcn))) {
@@ -308,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
             llToolbar.setBackground(DefaultThemeSet.mkShape(new JSONObject(ASelf.getCalcSet(this).getString(getResources().getString(R.string.background_toolbar_color),""))));
             aSelf.setEntryNumberColors(getApplicationContext(), DefaultThemeSet.mkShape(new JSONObject(ASelf.getCalcSet(this).getString(getResources().getString(R.string.numbers_color),""))), ASelf.getCalcSet(this).getInt(getResources().getString(R.string.numbers_textc),0));
             aSelf.setSymbolColors(getApplicationContext(), DefaultThemeSet.mkShape(new JSONObject(ASelf.getCalcSet(this).getString(getResources().getString(R.string.symbols_color),""))), ASelf.getCalcSet(this).getInt(getResources().getString(R.string.symbols_textc),0));
-            
+
             hsvNC.setBackground(DefaultThemeSet.mkShape(new JSONObject(ASelf.getCalcSet(this).getString(getResources().getString(R.string.calculation_now_color),""))));
             svC.setBackground(DefaultThemeSet.mkShape(new JSONObject(ASelf.getCalcSet(this).getString(getResources().getString(R.string.calculation_details_color),""))));
             */
@@ -317,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
     }
-    
+
     private void glBtns() {
         try {
             btnHistory.setOnClickListener(new View.OnClickListener() {
@@ -370,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
                         if(aSelf.isStandBy()){clearC(); aSelf.setStandBy(false);}
                             if(aSelf.arr.size()<1){aSelf.entry(MainActivity.this,"2");}
                             aSelf.entry(MainActivity.this,"√");
-                            
+
                         }
                     });
                 ((Button)findViewById(R.id.btnMPowr)).setOnClickListener(new View.OnClickListener() {
@@ -380,24 +387,24 @@ public class MainActivity extends AppCompatActivity {
                             if(aSelf.isStandBy()){clearC(); aSelf.setStandBy(false);}
                             if(aSelf.arr.size()<1){aSelf.entry(MainActivity.this,"1");}
                     aSelf.entry(MainActivity.this,"e");
-                            
+
                         }
                     });
-            
+
         } catch(Exception ex) {
             Toast.makeText(this, ex.getMessage(), Toast.LENGTH_SHORT).show();
             ex.printStackTrace();
         }
     }
-    
+
     private void applyOnClick() {
         try {
            /* for(int a = 0; a < llEntry.getChildCount(); a++) {
                 LinearLayout ll = ((LinearLayout)llEntry.getChildAt(a));
-            
+
                 for(int b = 0; b < ll.getChildCount(); b++) {
                     final int mb = b;
-                    
+
                     ((Button)ll.getChildAt(b)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -420,31 +427,31 @@ public class MainActivity extends AppCompatActivity {
                              } else if(aSelf.mKeypadMode.equals(ASelf.KeypadModeOpt.Selection)) {
                                     switch (mb) {
                                      case 0: //Copy, Paste, Options
-                                         
+
                                          break;
                                      case 1: //Move Up
-                                        
+
                                          break;
                                      case 2: //Close Mode
-                                        
+
                                          break;
                                      case 3: //Move LeftgetStandBy()
                                          //tvCurrent.setSelection()
                                          break;
                                      case 4: //Select, Select All
-                                        
+
                                          break;
                                      case 5: //Move Right
-                                        
+
                                          break;
                                      case 6: //Plain
-                                        
+
                                          break;
                                      case 7: //Move Down
-                                        
+
                                          break;
                                      case 8: //Plain
-                                        
+
                                          break;
                                  }
                              }
@@ -476,23 +483,23 @@ public class MainActivity extends AppCompatActivity {
 									     public void afterTextChanged(Editable e) {}
             });
             }*/
-            
+
                 btnScifra.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                         MediumAnims.scifraMenu(svScifra, (svScifra.getAlpha()==1)?false:true);
                     }
                 });
-            
+
                 btnSettings.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                         //Toast.makeText(getApplicationContext(), "Settings", Toast.LENGTH_SHORT).show();
-                    
+
                         startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                     }
                 });
-            
+
             btnSignChange.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -500,13 +507,14 @@ public class MainActivity extends AppCompatActivity {
                         CBMOptions.funSignChange(MainActivity.this, new Object[]{tvCurrent});
                         aSelf.arrAct(MainActivity.this);
                     } else {v.showContextMenu();}
-                    
+
                 }
             });
-            
+
         btnPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mEt.getText().append(mEt.getText().toString().contains(".")?"":".");
 //                    if(tvCurrent==null) {aSelf.entry(v.getContext(), "0.");}
                     if(!aSelf.isStandBy()) {
                         String s = ((Button)v).getText().toString();
@@ -514,7 +522,7 @@ public class MainActivity extends AppCompatActivity {
                 if(((Button)v).getText().toString().equals(".")) {
                     if(!isDotd) {
                        //tvCurrent.setText(aSelf.editNowValue(((Button)v).getText().toString()));
-                        isDotd=true;
+                        isDotd= mEt.getText().toString().contains(".");
                         if(tvCurrent.getText().toString().isEmpty() || aSelf.cTxt.isEmpty()) {
                             //tvCurrent.setText(tvCurrent.getText() + "0.");
                             tvc="0";
@@ -529,7 +537,6 @@ public class MainActivity extends AppCompatActivity {
                         isDotd = false;
                         aSelf.cTxt=i+"";
                         aSelf.editNowValue(i+"", true);
-                    
                     }
                 }
             } else {
@@ -538,19 +545,19 @@ public class MainActivity extends AppCompatActivity {
                         aSelf.entry(v.getContext(), "0.");}
                     aSelf.arrAct(MainActivity.this);
                     if(aSelf.cTxt.contains(".")){isDotd = true;}
-                        }    
+                        }
         });
-                
+
         btnRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 clearC();
                 if(aSelf.getSBEg(getApplicationContext())==1) placeholders();
                 aSelf.carriedAnswer="";
-    
+
             }
         });
-            
+
         btnBackspace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -644,8 +651,10 @@ public class MainActivity extends AppCompatActivity {
                     if(aSelf.cTxt.isEmpty()) {
                         aSelf.entry(MainActivity.this,"0");
                     }
-                    
+
                     clearCTVS();
+                    svC.setVisibility(View.VISIBLE);
+                    etLayout.setVisibility(View.GONE);
                     llCalculation.removeAllViews();
                     aSelf.setHCB(false);
                     BigDecimal ans = new BigDecimal(aSelf.arr.get(0));
@@ -661,7 +670,7 @@ public class MainActivity extends AppCompatActivity {
                     //Toast.makeText(getApplicationContext(), "= Calculate", Toast.LENGTH_LONG).show();
                     String standByPH = "Empty";
                     boolean expCont=false;
-                            
+
                     if(aSelf.arrS.isEmpty()){
                         expCont=true;
                         aSelf.addListItem(aSelf.arrS, new JSONObject().put("CalculationName","#"+calcN+" Calculation").put("Calculation",aSelf.arr));
@@ -677,11 +686,11 @@ public class MainActivity extends AppCompatActivity {
                             if(x>1){anso = new BigDecimal(aSelf.arr.get(x));}
                             else {continue;}
                             ans = ASelf.calculate(currentSign, ans, anso);
-                            
+
                             String c = "";
                             if(x>=0) {
                                if(cAns>1)c = "(@"+(cAns-1)+")";
-                                        
+
                                 answ = (ans2+"").endsWith(".0")?Integer.parseInt((ans2+"").substring(0, (ans2+"").indexOf(".")))+"":(ans2+"");
                                 answ2 = (ans+"").contains(".")?((ans+"").endsWith(".0")?Integer.parseInt((ans+"").replace(".0",""))+"":(ans+"")):(ans+"");
                                 answ3 = aSelf.arr.get(x);
@@ -704,7 +713,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                     }
-                        
+
                        //String answ = String.valueOf(ans).endsWith(".0")?String.valueOf(Integer.parseInt(ans+"")+""):String.valueOf(ans);
                         if(ASelf.getCalcSet(getApplicationContext()).getString(getResources().getString(R.string.decimal_always_switch),"").equals("On")) {
                                     //answ2 = ans+"";
@@ -717,7 +726,7 @@ public class MainActivity extends AppCompatActivity {
                         if(ASelf.carryAnswer)aSelf.carriedAnswer=answ2;
                         //tvNowCalculation.setText(tvNowCalculation.getText()+"=");
                         if(!((TextView)llNC.getChildAt(llNC.getChildCount()-1)).getText().toString().equals("=")){
-                                CurrentComponents.addCurrentTV(MainActivity.this, "=", 1);}
+                                CurrentComponents.addCurrentTV(llNC.getContext(), "=", 1);}
                         //aSelf.arr.add("=");
                         btnSignChange.setEnabled(false);
                             //if(Ut.containsMads(aSelf.arr.toString()))btnMASMD.setEnabled(true);
@@ -733,9 +742,9 @@ public class MainActivity extends AppCompatActivity {
                         if(llCalculation.getChildCount()>0){
                             if(tvDoneCalculation.getAlpha()!=1) {tvDoneCalculation.setText(tvDoneCalculation.getText().toString() + " | Write an expression");}
                             standByPH+=" +Example";
-                            
+
                         }
-                    
+
                         //tvCTitle.setText(tvDoneCalculation.getAlpha()==1?"Calculation "+calcN:standByPH);
                         tvCTitle.setText(tvDoneCalculation.getAlpha()==1?aSelf.calcNm:standByPH);
                         btnPercentage.setEnabled(false);
@@ -760,7 +769,7 @@ public class MainActivity extends AppCompatActivity {
         } catch(Exception ex) {
 //            Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_LONG).show();
             ex.printStackTrace();
-                
+
         }
     }
 
@@ -830,6 +839,8 @@ public class MainActivity extends AppCompatActivity {
                     String str = ((Button)v).getText().toString();
                     if(aSelf.isStandBy()) {
                         clearC();
+                        svC.setVisibility(View.GONE);
+                        mEt.setVisibility(View.VISIBLE);
                         aSelf.setStandBy(false);
                         if(ASelf.carryAnswer&&!ASelf.isNumber(str)){
                             if(!aSelf.carriedAnswer.isEmpty()&&ASelf.isNumber(aSelf.carriedAnswer)) {
@@ -843,7 +854,11 @@ public class MainActivity extends AppCompatActivity {
                         aSelf.arr.set(aSelf.arr.size() - 1, aSelf.editNowValue("0"));
                         tvCurrent.setText(aSelf.arr.get(aSelf.arr.size() - 1));
                     }
-                    aSelf.entry(MainActivity.this,str);
+                    if(ASelf.isNumber(str)){mEt.append(str);}
+                    else {
+                        String strEt = mEt.getText().toString();
+                        strEt = strEt.isEmpty()?"0":strEt;
+                        aSelf.entry(MainActivity.this,strEt);mEt.setText("");aSelf.entry(MainActivity.this,str);}
                     aSelf.arrAct(MainActivity.this);
                     if(!ASelf.isNumber(str)){isDotd=false;}
                 } catch(Exception ex) {
@@ -862,6 +877,8 @@ public class MainActivity extends AppCompatActivity {
         llCalculation.removeAllViews();
         hsvNC.smoothScrollTo(0,0);
         svC.smoothScrollTo(0,0);
+        etLayout.setVisibility(View.VISIBLE);
+        svC.setVisibility(View.GONE);
         CurrentComponents.addCurrentTV(this, "");
         currIndex = 0;
         aSelf.arr.clear();
